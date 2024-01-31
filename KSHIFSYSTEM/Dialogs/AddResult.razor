@@ -1,0 +1,97 @@
+﻿@inject IJSRuntime _js
+@inject IWebHostEnvironment _env
+@inject NavigationManager _navigationManager
+@inject ITarsheh _Tarsheh
+@inject ISnackbar _Sb
+@inject ApplicationDbContext _DB
+
+@attribute [Authorize(Roles = "admin,eatalaJazaea")]
+
+
+<div  style=" direction:rtl; border:solid;padding:20px; margin:20px;background-color:white;border-color:lightblue;border-radius:20px;">
+
+    <EditForm Model="Tarsheh" OnValidSubmit="EditData">
+            
+        <div class="form-control">
+            <MudItem>
+                <MudTextField Style="background-color:white" Label=" اضافة نتيجة الكشف " T="string" Variant="Variant.Outlined" @bind-Value="@ResulT" />
+            </MudItem>
+        </div>
+        
+        <div class="form-control">
+               
+                <label style="font-size:20px;margin:20px">رفع نتيجة الكشف</label>
+                <MudItem>
+                    <InputFile accept=".pdf" class="form-control" style="background-color:transparent" OnChange="CheckFile" />
+                </MudItem>
+        </div>
+
+        <MudButton ButtonType="ButtonType.Submit" @onclick='()=>_navigationManager.NavigateTo("../viewAllTarshehBooks")' FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Success" Size="Size.Large"> حفظ النتائج </MudButton>
+     </EditForm>
+</div>
+
+
+ @code{
+
+
+    [CascadingParameter] 
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+    public string ResulT;
+    public TarshehBook Tarsheh { get; set; } = new TarshehBook();
+    public InputFileChangeEventArgs UplaodedBookImage { get; set; }
+
+    private async Task EditData()
+    {
+        var Book = _DB.TarshehBookTable.FirstOrDefault(a=>a.ID == Id);
+        Book.KshifResult = ResulT;
+        Book.KshifResultPicture = await UploadDawaImageToFileSystem();
+        await _DB.SaveChangesAsync(); 
+
+    }
+    private async Task CheckFile(InputFileChangeEventArgs UploadedFile)
+    {
+
+        //.png,.jpg,.jpeg,.pdf
+        if (UploadedFile.File.ContentType == "application/pdf")
+        {
+            
+                await _js.InvokeVoidAsync("alert", "تم ارفاق الملف بنجاح");
+                UplaodedBookImage = UploadedFile;
+            
+
+        }
+        else
+        {
+            await _js.InvokeVoidAsync("alert", "نوع الملف غير مطابق");
+            return;
+        }
+    }
+    private async Task<string> UploadDawaImageToFileSystem()
+    {
+        if (UplaodedBookImage is not null)
+        {
+            var FileName = Tarsheh.BookNo + "_" + Guid.NewGuid().ToString() + $"{UplaodedBookImage.File.Name}";
+            var FolderPath = $"{_env.WebRootPath}\\KshifResult";
+            var FullPath = Path.Combine(FolderPath, FileName);
+            var MemoryStream = new MemoryStream();
+            await UplaodedBookImage.File.OpenReadStream(5000000).CopyToAsync(MemoryStream);
+
+
+            // FileMode : to give permission to the filestream to create files
+            await using (var fs = new FileStream(FullPath, FileMode.Create, FileAccess.Write))
+            {
+                MemoryStream.WriteTo(fs);
+            }
+
+            return $"KshifResult\\{FileName}";
+        }
+        else
+        {
+            return "";
+        }
+
+
+    }
+}

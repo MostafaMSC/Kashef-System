@@ -1,0 +1,267 @@
+﻿@inherits LayoutComponentBase
+@inject IKshifInfo _SP
+<style>
+    a {
+        color: #3498db;
+        text-decoration: none;
+        position: relative;
+        transition: color 0.3s ease;
+    }
+
+        /* Define styles for the link when hovered */
+        a:hover {
+            color: green;
+        }
+
+        /* Create an underline effect on hover */
+        a::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: green;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+        /* Expand the underline on hover */
+        a:hover::before {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+</style>
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudLayout Style="direction:rtl; font-family:'Times New Roman', Times, serif, Geneva, Tahoma, sans-serif">
+    
+    <div class="page" style="background-color:#607D8B;background-image: linear-gradient(rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.25) 35%, rgba(0,0,0,0) 65%);box-shadow: 0 1px 3px rgba(0,0,0,0.4)" Square="true">
+        <AuthorizeView>
+            <Authorized>
+
+        <div style="background-image:none; border-radius:20px">
+            <br />
+            <br />
+            <br />
+            <MudDrawer Style="border-radius:5px" ClipMode="clipMode" @bind-Open="@open" Anchor="@anchor" Elevation="1" Variant="@DrawerVariant.Temporary">
+                <MudNavMenu>
+                    <MudDivider Class="my-2" />
+                    <MudNavLink Style="margin:10px" Match="NavLinkMatch.All" Href="/" Icon="@Icons.Material.Filled.DashboardCustomize" IconColor="Color.Tertiary"><h6 style="color:black"><b>الواجهة الرئيسية</b></h6></MudNavLink>
+
+                    <MudNavLink Style="margin:10px" Match="NavLinkMatch.All" Href="/wared" Icon="@Icons.Material.Filled.AddBox" IconColor="Color.Tertiary"><h6 style="color:black"><b>اضافة الكتب الواردة للترشيح</b></h6></MudNavLink>
+
+
+                    <MudNavLink Style="margin:10px" Class="div" Href="/viewBooks" Icon="@Icons.Material.Filled.TableRows" IconColor="Color.Primary"> <h6 style="color:black"><b> جدول الكتب الواردة </b></h6></MudNavLink>
+                    <MudNavLink Style="margin:10px" Class="div" Href="/viewAllTarshehBooks" Icon="@Icons.Material.Filled.TableRows" IconColor="Color.Secondary"> <h6 style="color:black"><b> جدول كتب الترشيح </b></h6></MudNavLink>
+                    <MudNavLink Style="margin:10px" Class="div" Href="/allSpecial" Icon="@Icons.Material.Filled.TableRows" IconColor="Color.Success"> <h6 style="color:black"><b> جدول  الخبراء </b></h6></MudNavLink>
+                    <MudNavLink Style="margin:10px" Class="div" Href="/AddSpecial" Icon="@Icons.Material.Filled.Add" IconColor="Color.Primary"> <h6 style="color:black"><b> اضافة خبير</b></h6></MudNavLink>
+
+                    <MudNavGroup Class="div" Title="ادارة مستخدمي النظام" Style="font-size:16px; color:black; margin:10px" Icon="@Icons.Material.Filled.GroupWork" IconColor="Color.Surface">
+
+                    <MudNavLink Style="margin:10px" Class="div" Href="/Identity/Account/Register" Icon="@Icons.Material.Filled.Security" IconColor="Color.Surface"><h6 style="color:black"><b>كلمات المرور</b></h6></MudNavLink>
+                    <MudNavLink Style="margin:10px" Class="div"  Href="/SystemUsers" Icon="@Icons.Material.Filled.AdminPanelSettings" IconColor="Color.Tertiary"><h6 style="color:black"><b>ادارة مستخدمي النظام</b></h6></MudNavLink>
+                    </MudNavGroup>
+                </MudNavMenu>
+            </MudDrawer>
+            <br />
+            <br />
+            <br />
+            <br />
+            <center>
+                <b>
+                            <MudFab Class="a" Href="/specialest" Label="أختيار الخبراء" Style="border:solid; border-color:cadetblue ; background-color:floralwhite;font-size:large; color:#00695C" StartIcon="@Icons.Material.Filled.Add" />
+                </b>
+            </center>
+
+            <br />
+            <br />
+            <center>
+                <b>
+                            <MudFab Href="/timeline" Label="تتبع الكتب" Style="border:solid; border-color:cadetblue ; background-color:floralwhite;font-size:large; color:#00695C" StartIcon="@Icons.Material.Filled.DirectionsWalk" />
+                </b>
+            </center>
+
+            <br />
+            <br />
+            <br />
+
+                    <MudList Style="height:300px;width:200px;overflow:auto;background-color:floralwhite;border-radius:20px;margin-right:10px">
+                        <center><b style="font-size:medium">     الخبراء الموقفين حاليا     </b></center>
+
+                        @foreach (var Sp in ListOfBlockedSpecilest)
+                        {
+                            <MudListItem  Avatar="@Icons.Material.Filled.Block" IconColor="Color.Error" Style="color:#00695C">
+                                @Sp.Name
+                            </MudListItem>
+                        }
+                                                
+                    </MudList>
+            @* <center>
+            <h6 style="color:#01579B"><b>Ministery Of Water Resources   </b></h6>
+            <br />
+            <MudRating SelectedValue="2" Size="Size.Medium" />
+            <br />
+            <br />
+            <b style="color:#01579B">Information Technology</b>
+            <br />
+            </center> *@
+        </div>
+                </Authorized>
+        <NotAuthorized>
+
+        </NotAuthorized>
+    </AuthorizeView>
+
+
+        <MudMainContent Style="direction:rtl; width:600px">
+            <br />
+            @Body
+            <br />
+            <footer><center><b style="font-size:20px;color:white">Programmers: Mustafa Najem - Rana Talib</b></center></footer>
+        </MudMainContent>
+@*         <AuthorizeView>
+            <Authorized> *@
+
+            
+
+        <div style="max-width:100%;
+        padding: 1rem;
+        box-sizing: border-box;
+        margin: 0 auto;">
+            <MudAppBar Elevation="4" Color="Color.Inherit" Style=" background-color:ghostwhite; font-size: 2vw;   height:60px;position:fixed">
+
+                <MudIconButton class="display-4" Size="Size.Large" Icon="@Icons.Outlined.Dashboard" Color="Color.Surface" OnClick="@(() => OpenDrawer(Anchor.End))" />
+
+                <h4 class="display-4" style="color:#00695C;text-shadow: 1px 1px white; text-align:end; border-color:black; font-size: 2vw">
+                    <b>وزارة الموارد المائية</b>
+                </h4>
+
+                <h4 style="color:ghostwhite; font-size: 2vw" class="display-4">
+                    __________________________
+                </h4>
+                <h4 style=" color:#00695C;text-shadow: 1px 1px white; text- align:end; font-size: 2vw" class="display-4">
+                    <b>نظام الترشيح الالكتروني</b>
+                </h4>
+
+
+
+                <MudSpacer />
+                <LoginDisplay></LoginDisplay>
+
+            </MudAppBar>
+        </div>
+@*             </Authorized>
+            <NotAuthorized>
+
+            </NotAuthorized>
+        </AuthorizeView> *@
+    </div>
+
+</MudLayout>
+
+
+@code {
+    bool open = false;
+    Anchor anchor;
+    DrawerClipMode clipMode = DrawerClipMode.Always;
+    [CascadingParameter]
+    public IEnumerable<KshfInfoModule> ListOfBlockedSpecilest { get; set; } = new List<KshfInfoModule>();
+    void OpenDrawer(Anchor anchor)
+    {
+        open = !open;
+        this.anchor = anchor;
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await Task.Delay(2000);
+        ListOfBlockedSpecilest = await _SP.GetAllBlockedSpecialest();
+    }
+}
+
+@*@using MinistryOfWarerResources.Components
+@using MinistryOfWarerResources.Pages
+*@
+@*@inherits LayoutComponentBase
+<MudThemeProvider @bind-IsDarkMode="@ChangeTheme" />
+<MudDialogProvider />
+<MudSnackbarProvider />*@
+
+@*@inject ISnackbar Snackbar
+
+
+@code {
+    private void OnClick(MouseEventArgs args) => Snackbar.Add("OnClick Invoked");
+    private void OnTouch(TouchEventArgs args) => Snackbar.Add("OnTouch Invoked");
+}
+@code {
+    public bool ChangeTheme { get; set; }
+}
+<MudToggleIconButton @bind-Toggled="@ChangeTheme"
+                     Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Error" Title="Off"
+                     ToggledIcon="@Icons.Material.Filled.LightMode" ToggledColor="@Color.Success" ToggledTitle="On" />
+<MudTabs Style="margin:40px;" Elevation="4" Rounded="true" Color="@Color.Primary" PrevIcon="@Icons.Material.Filled.SkipPrevious" NextIcon="@Icons.Material.Filled.SkipNext" PanelClass="pa-6">
+@*
+*@   @* <MudTabPanel >
+        <ChildContent>
+            <MudText><Index /></MudText>
+        </ChildContent>
+        <TabContent >
+            <b style="font-size:15px">اضافة ملف الدعاوى </b>
+        </TabContent>
+    </MudTabPanel>
+    <MudTabPanel>
+        <ChildContent>*@
+           @* <MudText><DawaJAZAEA/></MudText>
+        </ChildContent>
+        <TabContent>
+            <b style="font-size:15px">اضافة ملف الدعاوى الجزائية </b>
+        </TabContent>
+    </MudTabPanel>
+    <MudTabPanel>
+        <ChildContent>*@
+           @* <MudText><AllStaff /></MudText>
+        </ChildContent>
+        <TabContent>
+            <b style="font-size:15px">سجل الدعاوى</b>
+        </TabContent>
+    </MudTabPanel>
+    <MudTabPanel>
+        <ChildContent>
+            <MudText><JazaeaALL></JazaeaALL></MudText>
+        </ChildContent>
+        <TabContent>
+            <b style="font-size:15px">سجل الدعاوى الجزائية </b>
+        </TabContent>
+    </MudTabPanel>
+*@
+@*<MudTabPanel>
+    <ChildContent>
+        <MudText><AddOffice/></MudText>
+    </ChildContent>
+    <TabWrapperContent>
+        <MudTooltip Text="ToolTip Two">
+            @context
+        </MudTooltip>
+    </TabWrapperContent>
+    <TabContent>*@
+          @*  <MudText Typo="Typo.h6"><b style="font-size:15px"> ترميز  التشكيلات</b></MudText>
+    </TabContent>
+</MudTabPanel>
+<MudTabPanel>
+    <ChildContent>
+        <MudText></MudText>
+    </ChildContent>
+
+    <TabWrapperContent>
+        <MudTooltip Text="ToolTip Three">
+            @context
+        </MudTooltip>
+    </TabWrapperContent>
+</MudTabPanel>
+</MudTabs>*@

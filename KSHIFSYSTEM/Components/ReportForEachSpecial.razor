@@ -1,0 +1,51 @@
+﻿@page "/SpecialReport/{Name}"
+@inject ITarsheh _Tarsheh
+@inject ISnackbar _Sb
+@inject ApplicationDbContext _db
+@inject IJSRuntime _js
+
+<center>
+    <MudFab Style="margin:30px" OnClick="GetSpecialInfo" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Search">
+    </MudFab>
+    <MudFab @onclick="printAll" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Print" Color="Color.Error"><b>طباعة</b></MudFab>
+
+</center>
+
+<div id="Area2" style="margin:20px">
+    <center><h2 style="color:black;margin:20px"><b>@Name</b></h2></center>
+    <MudTable T="TarshehBook" Items="@AllTarsheh" Hover="true" Breakpoint="Breakpoint.Md">
+        <HeaderContent>
+            <MudTh>رقم الكتاب</MudTh>
+            <MudTh>الجهة</MudTh>
+            <MudTh>تاريخ الكشف</MudTh>
+            <MudTh>نوع الكشف</MudTh>
+            <MudTh>نتيجة الكشف </MudTh>
+            <MudTh> المحافظة </MudTh>
+
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.BookNo</MudTd>
+                <MudTd DataLabel="Sign">@context.JehaName</MudTd>
+                <MudTd DataLabel="Name">@context.KshefDate.Value.ToString("dd-MM-yyyy")</MudTd>
+                <MudTd DataLabel="Position">@context.KshifType</MudTd>
+                <MudTd DataLabel="Molar mass">@context.KshifResult</MudTd>
+                <MudTd DataLabel="Molar mass">@context.city</MudTd>
+            </RowTemplate>
+        </MudTable>
+        
+</div>
+
+@code {
+
+    [Parameter]
+    public string Name { get; set; }
+    public List<TarshehBook> AllTarsheh { get; set; } = new List<TarshehBook>();
+    public async Task GetSpecialInfo()
+    {
+        AllTarsheh = await _Tarsheh.GetSpecialInfoByName(Name);
+    }
+    private async void printAll()
+    {
+        await _js.InvokeVoidAsync("print", "Area2");
+    }
+}

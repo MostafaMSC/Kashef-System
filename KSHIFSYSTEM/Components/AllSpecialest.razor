@@ -1,0 +1,169 @@
+﻿@page "/allSpecial"
+
+@inject IKshifInfo _Spec
+@inject IJSRuntime _js
+@inject ISnackbar _Sb
+@inject IKshifInfo _SP
+@inject NavigationManager _Nav
+@inject IDialogService _Dialog
+@attribute [Authorize(Roles = "admin,eatalaJazaea,DawaView")]
+<PageTitle> كل الخبراء  </PageTitle>
+
+
+
+
+<div id="Area1" class="table-responsive">
+    <center><MudText Style="color:aqua" Typo="Typo.h4">جدول الخبراء</MudText></center>
+    <br />
+    <MudDataGrid Striped="true" Elevation="18" Bordered="true"
+                 Style="background-color:whitesmoke; border:solid;padding:20px;border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px"
+                 T="KshfInfoModule" MultiSelection="true" Items="@Elements" SortMode="SortMode.Multiple" Filterable="false"
+                 Hover="true" Hideable="true" QuickFilter="@_quickFilter" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged">
+        <ToolBarContent>
+            <MudSpacer />
+            <MudTextField FullWidth @bind-Value="_searchString" Placeholder="بحث" Adornment="Adornment.Start" Immediate="true"
+                           Style="background-color:white" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+
+            <AuthorizeView Roles = "admin">
+                <Authorized>
+                     <MudButton @onclick="DeleteDawas" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error"></MudButton>
+                     <MudButton @onclick="BlockSpecial" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Block" Color="Color.Error"></MudButton>
+                     <MudButton @onclick="UnBlockSpecial" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Block" Color="Color.Success"></MudButton>
+                </Authorized>
+            </AuthorizeView>
+         </ToolBarContent>
+         <Columns>
+             <SelectColumn T="KshfInfoModule" />
+             <PropertyColumn Property="x => x.Name" Title="اسم الخبير" Sortable="true" Filterable="false" />
+             <PropertyColumn Property="x => x.KshifType" Title=" نوع الكشف" />
+             <PropertyColumn Property="x => x.TotalKSofat" Title="عدد الكشوفات الكلي" />
+             <PropertyColumn Property="x => x.JobTitle" Title="العنوان الوظيفي" />
+             <PropertyColumn Property="x => x.SpecialBlock" Title="حالة الخبير" />
+             <TemplateColumn>
+                 <CellTemplate>
+                     تقرير الخبير
+                     <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Archive" OnClick="() => NavigateToProfile(context.Item.Name)">تقرير الخبير</MudIconButton>
+                 </CellTemplate>
+             </TemplateColumn>
+         </Columns>
+         <PagerContent>
+             <MudDataGridPager T="KshfInfoModule" />
+         </PagerContent>
+     </MudDataGrid>
+ </div>
+ <MudScrollToTop>
+     <MudFab Color="Color.Tertiary" Icon="@Icons.Material.Filled.ArrowCircleUp" />
+ </MudScrollToTop>
+@* 
+ <script>
+     var field = document.querySelector("#state");
+     if (field.innerHTML.trim() === "متاح للعمل") {
+         field.style.color = "green";
+
+     } else {
+         field.style.color = "red";
+     }
+
+ </script> *@
+ @code {
+
+    [CascadingParameter]
+    public IEnumerable<KshfInfoModule> ListOfBlockedSpecilest { get; set; } = new List<KshfInfoModule>();
+    [Parameter]
+    public string Name { get; set; }
+    
+    private List<string> _events = new();
+    private IEnumerable<KshfInfoModule> Elements = new List<KshfInfoModule>();
+    private List<KshfInfoModule> SpecificRecords { get; set; } = new List<KshfInfoModule>();
+
+    public List<KshfInfoModule> ListOfDeletedBooks { get; set; } = new List<KshfInfoModule>();
+    private string _searchString;
+    private bool _sortNameByLength;
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await _Spec.GetAllSpecialest();
+    }
+    void RowClicked(DataGridRowClickEventArgs<KshfInfoModule> args)
+    {
+        _events.Insert(0, $"Event = RowClick, Index = {args.RowIndex}, Data = {System.Text.Json.JsonSerializer.Serialize(args.Item)}");
+    }
+
+    void SelectedItemsChanged(HashSet<KshfInfoModule> items)
+    {
+        _events.Insert(0, $"Event = SelectedItemsChanged, Data = {System.Text.Json.JsonSerializer.Serialize(items)}");
+        ListOfDeletedBooks = items.ToList();
+    }
+
+    private async Task DeleteDawas()
+    {
+        var Response = await _js.InvokeAsync<bool>("confirm", "هل انت متاكد من الحذف");
+        if (Response)
+        {
+            var BackEndREsponse = await _Spec.DeleteListOfDawas(ListOfDeletedBooks.Select(a => a.ID).ToList());
+            _Sb.Add(BackEndREsponse, Severity.Success);
+            Elements = await _Spec.GetAllSpecialest();
+            ListOfBlockedSpecilest = await _SP.GetAllBlockedSpecialest();
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    private Func<KshfInfoModule, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        // if (x.DeptTable.OfficeTable.OfficeName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        //     return true;
+
+        if ($"{x.Name} {x.KshifType} {x.KshofatNo}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+
+    private async Task BlockSpecial()
+    {
+        var Response = await _js.InvokeAsync<bool>("confirm", "هل انت متاكد من ايقاف الخبير ");
+        if (Response)
+        {
+            var BackEndREsponse = await _Spec.BlockSpecial(ListOfDeletedBooks.Select(a => a.ID).ToList());
+            _Sb.Add(BackEndREsponse, Severity.Success);
+            Elements = await _Spec.GetAllSpecialest();
+            ListOfBlockedSpecilest = await _SP.GetAllBlockedSpecialest();
+
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    private async Task UnBlockSpecial()
+    {
+        var Response = await _js.InvokeAsync<bool>("confirm", "هل انت متاكد من اتاحة الخبير للعمل");
+        if (Response)
+        {
+            var BackEndREsponse = await _Spec.UnBlockSpecial(ListOfDeletedBooks.Select(a => a.ID).ToList());
+            _Sb.Add(BackEndREsponse, Severity.Success);
+            Elements = await _Spec.GetAllSpecialest();
+            ListOfBlockedSpecilest = await _SP.GetAllBlockedSpecialest();
+
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    private void NavigateToProfile(string name)
+    {
+        _Nav.NavigateTo($"/SpecialReport/{name}");
+    }
+    
+}

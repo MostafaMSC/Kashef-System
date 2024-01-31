@@ -1,0 +1,78 @@
+﻿@page "/AddSpecial"
+@inject IJSRuntime _js
+@inject IWebHostEnvironment _env
+@inject ApplicationDbContext _db
+@inject IKshifInfo _Kshif
+
+@attribute [Authorize(Roles = "admin,eatalaJazaea")]
+
+
+
+<PageTitle>اضافة الخبراء</PageTitle>
+<center><MudText Typo="Typo.h4" Style="color:aquamarine"> اضافة معلومات الخبير </MudText></center>
+<br />
+<div  style="border:solid;padding:20px;background-color:whitesmoke; border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+    <EditForm OnValidSubmit="SaveData" Model="Specialest">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2">
+            <div class="class1 class2" style="align-content:end">
+                <MudItem>
+                    <MudTextField Required style="background-color:white" Label="اسم الخبير" T="string" Variant="Variant.Outlined" @bind-Value="@Specialest.Name" />
+                </MudItem>
+
+            </div>
+            <div class="col">
+
+                <MudItem>
+                    <MudTextField style="background-color:white" Label=" عدد الكشوفات" T="int" Variant="Variant.Outlined" @bind-Value="@Specialest.KshofatNo" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                     <MudSelect Required T="string" style="background-color:white" @bind-Value="@Specialest.KshifType" Label="اختر نوع الكشف" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@("محاكم")">محاكم</MudSelectItem>
+                        <MudSelectItem Value="@("عقارات دولة")"> عقارات الدولة </MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Required style="background-color:white" Label="العنوان الوظيفي" T="string" Variant="Variant.Outlined" @bind-Value="@Specialest.JobTitle" />
+                </MudItem>
+                <br />
+            </div>
+        <br />
+        <br />
+            <MudButton style="background-color:white" ButtonType="ButtonType.Submit" FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Size="Size.Large"><b>اضافة خبير </b></MudButton>
+
+        <br />
+        <br />
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    public KshfInfoModule Specialest { get; set; } = new KshfInfoModule();
+    private async Task SaveData()
+    {
+        var UserResponse = await _js.InvokeAsync<bool>("confirm", "هل تود اضافة الخبير الى النظام؟");
+        if (UserResponse)
+        {
+            var CheckUserExists = await _Kshif.CheckIfSpecialestExistsInDB(Specialest);
+            if (CheckUserExists is true)
+            {
+                await _js.InvokeVoidAsync("alert", $"هذا  الخبير : {Specialest.Name} موجود في النظام مسبقاً");
+            }
+            else
+            {
+                var BackEndResponse = await _Kshif.AddNewSpecialestToTheSystem(Specialest);
+                await _js.InvokeVoidAsync("alert", BackEndResponse);
+                Specialest = new KshfInfoModule();
+            }
+        }
+    }
+    
+    
+    
+}

@@ -1,0 +1,345 @@
+﻿@page "/wared"
+@inject IJSRuntime _js
+@inject IWebHostEnvironment _env
+@inject ApplicationDbContext _db
+@inject IDawa _Dawa
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+=<script>
+    function updateCurrentTime() 
+        {
+
+
+            CurrentTime = document.querySelector('updateTime');
+            updateTime.innerText = CurrentTime;
+        }
+    }
+    setInterval(updateCurrentTime, 1000);
+</script>
+
+@attribute [Authorize(Roles = "admin,eatalaJazaea")]
+<AuthorizeView>
+<PageTitle>ادخال معلومات الكتاب الوارد</PageTitle>
+<center style="margin-bottom:20px">
+    <MudText Typo="Typo.h4" Style="color:white"><b> معلومات الكتاب الوارد لترشيح الخبراء</b> </MudText>
+</center>
+
+    <MudAlert Style="font-size:large;color:white" Severity="Severity.Success" Square="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Class="my-2" id="updateTime">
+        <div>
+                    @(Book.Update_Date.HasValue ? Book.Update_Date.Value.ToString("dd/MM/yyyy | hh:mm:ss") : "No Date")
+
+        </div>
+   </MudAlert>
+</AuthorizeView>
+
+
+<div style="border:solid;padding:20px;background-color:ghostwhite; elevation:2; border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+
+    
+    <br />
+    <EditForm OnValidSubmit="SaveData" Model="Book">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2">
+            <div class="col" style="align-content:end">
+                <MudItem>
+                    <MudTextField Required="true" Style="background-color:white" Label="رقم الكتاب" T="int" Variant="Variant.Outlined" @bind-Value="@Book.BookNo" />
+                </MudItem>
+
+            </div>
+
+            <div class="col">
+
+                <MudItem>
+                    <MudDatePicker Label="تاريخ الكتاب" Placeholder="تاريخ الكتاب" Required="true" @bind-Date="@Book.BookDate" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" />
+                </MudItem>
+            </div>
+
+            <div class="col">
+                <MudItem>
+                    <MudTextField Required="true" Style="background-color:white" Label="رقم كتاب الوارد " T="int?" Variant="Variant.Outlined" @bind-Value="@Book.HayaBookNo" />
+                </MudItem>
+
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudDatePicker Required="true" @bind-Date="@Book.HayaBookDate" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Label="تاريخ كتاب الوارد" Placeholder="تاريخ كتاب الوارد" />
+                </MudItem>
+
+            </div>
+
+            <br />
+        </div>
+        <br />
+
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2">
+            <div class="col">
+
+                <MudItem>
+                    <MudTextField Required="true"  Style="background-color:white" Label="رقم القطعة" T="string" Variant="Variant.Outlined" @bind-Value="@Book.PlaceNo" />
+                </MudItem>
+            </div>
+            <div class="col">
+
+                <MudItem>
+                    <MudTextField Required="true" Style="background-color:white" Label="رقم المقاطعة" T="string" Variant="Variant.Outlined" @bind-Value="@Book.MokataNO" />
+                </MudItem>
+            </div>
+
+            <div>
+                <MudItem>
+                    <MudSelect Required="true" Style="background-color:white" T="string" @bind-Value="@Book.City" Label="اختر المحافظة من فضلك" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@("  بغداد")"> بغداد </MudSelectItem>
+                        <MudSelectItem Value="@("  البصرة")">البصرة  </MudSelectItem>
+                        <MudSelectItem Value="@(" الديوانية ")"> الديوانية </MudSelectItem>
+                        <MudSelectItem Value="@("العمارة")">العمارة</MudSelectItem>
+                        <MudSelectItem Value="@("الموصل")">الموصل</MudSelectItem>
+                        <MudSelectItem Value="@("كركوك")">كركوك</MudSelectItem>
+                        <MudSelectItem Value="@("دهوك")">الموصل</MudSelectItem>
+                        <MudSelectItem Value="@("كربلاء")">كربلاء</MudSelectItem>
+                        <MudSelectItem Value="@("النجف")">النجف</MudSelectItem>
+                        <MudSelectItem Value="@("ديالى")">ديالى</MudSelectItem>
+                        <MudSelectItem Value="@("اربيل")">اربيل</MudSelectItem>
+                        <MudSelectItem Value="@("انبار")">انبار</MudSelectItem>
+                        <MudSelectItem Value="@("بابل")">بابل</MudSelectItem>
+                        <MudSelectItem Value="@("سليمانية")">سليمانية</MudSelectItem>
+                        <MudSelectItem Value="@("صلاح الدين")">صلاح الدين</MudSelectItem>
+                        <MudSelectItem Value="@(" المثنى")"> المثنى</MudSelectItem>
+                        <MudSelectItem Value="@(" ميسان")"> ميسان</MudSelectItem>
+                        <MudSelectItem Value="@(" الكوت")"> الكوت</MudSelectItem>
+
+                    </MudSelect>
+                </MudItem>
+
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudItem>
+
+                        <MudSelect Required="true" Style="background-color:white" Label="نوع الكشف" T="string" Variant="Variant.Outlined" @bind-Value="@Book.KashefType">
+                            <MudSelectItem Value="@("")"> أختر نوع الكشف</MudSelectItem>
+                            <MudSelectItem Value="@("محاكم")">محاكم</MudSelectItem>
+                            <MudSelectItem Value="@("عقارات دولة")">عقارات دولة </MudSelectItem>
+                        </MudSelect>
+                    </MudItem>
+                </MudItem>
+            </div>
+            
+
+        </div>
+
+        <br />
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-1">
+
+            <div class="col">
+                <MudItem>
+                    <MudTextField Required="true" Style="background-color:white" Label="اسم جهة الاصدار والمقاطعة" T="string" Variant="Variant.Outlined" @bind-Value="@Book.JahaName" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudDatePicker Label="تاريخ  الكشف" @bind-Date="@Book.KshefDate" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="تاريخ  الكشف" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Style="background-color:white" Label="عدد الخبراء " T="int?" Variant="Variant.Outlined" @bind-Value="@Book.AddadAlkhobraa" />
+                </MudItem>
+            </div>
+
+        </div>
+        <br />
+
+        <div>
+            <center><MudText Typo="Typo.h5" Style="color:#00695C"> استمارة شؤون المواطنين    </MudText></center>
+
+            <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1" style="border:solid;padding:20px; border-color:#00695C;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Required="true" Style="background-color:white" Label="رقم الاستمارة" T="int?" Variant="Variant.Outlined" @bind-Value="@Book.AstmaraNoP" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                        <MudDatePicker Required="true" Label="تاريخ  الاستمارة"  @bind-Date="@Book.AstmaraDateP" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
+                    </MudItem>
+                </div>
+            </div>
+            <br />
+            <br />
+            <center><MudText Typo="Typo.h5" Style="color:#00695C"> استمارة من قسم الموجودات    </MudText></center>
+
+
+            <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1" style="border:solid;padding:20px; border-color:#00695C;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Required="true" Style="background-color:white" Label="رقم الاستمارة" T="int?" Variant="Variant.Outlined" @bind-Value="@Book.AstmaraNoM" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                        <MudDatePicker Required="true" @bind-Date="@Book.AstmaraDateM" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
+                    </MudItem>
+                </div>
+            </div>
+        </div>
+
+        <div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <MudItem>
+                    <MudTextField Required="true"  Style="background-color:white" Label="رقم الوصل" T="int?" Variant="Variant.Outlined" @bind-Value="@Book.AlwasilNo" />
+                </MudItem>
+            </div>
+
+            <div class="col">
+                <MudItem>
+                    <MudDatePicker Required="true" Label="تاريخ  الوصل" @bind-Date="@Book.AlwasilDate" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
+                </MudItem>
+            </div>
+
+        </div>
+        <div>
+            <center><label style="font-size:20px;margin:20px"><b>رفع صورة الكتاب</b></label></center>
+            <MudItem>
+                <InputFile Required="true" accept=".pdf" class="form-control" style="background-color:transparent" OnChange="CheckFile" />
+            </MudItem>
+        </div>
+        <br />
+        <MudButton ButtonType="ButtonType.Submit" FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Tertiary" Size="Size.Large"><b style="color:#00695C">حفظ الكتاب</b></MudButton>
+
+         <br />
+         <br />
+     </EditForm>
+ </div>
+
+ <MudScrollToTop>
+     <MudFab Color="Color.Tertiary" Icon="@Icons.Material.Filled.ArrowCircleUp" />
+ </MudScrollToTop>
+
+ @code {
+    public BookInfo Book { get; set; } = new BookInfo();
+    public string UserName;
+
+    protected async override void OnInitialized()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Check if the user is authenticated before accessing the username
+        if (user.Identity.IsAuthenticated)
+        {
+            UserName = user.Identity.Name;
+        }
+        // Update the time every second
+        await UpdateCurrentTime();
+        base.OnInitialized();
+        
+
+    }
+    public InputFileChangeEventArgs UplaodedBookImage { get; set; }
+    private async Task SaveData()
+    {
+        var UserResponse = await _js.InvokeAsync<bool>("confirm", "هل تود اضافة الدعوى الى النظام؟");
+        if (UserResponse)
+        {
+            var CheckUserExists = await _Dawa.CheckIfDawaExistsInDB(Book);
+            if (CheckUserExists is true)
+            {
+                await _js.InvokeVoidAsync("alert", $"هذا الكتاب المرقم : {Book.BookNo} موجودة في النظام مسبقاً");
+            }
+            else
+            {
+                Book.BookPic = await UploadDawaImageToFileSystem();
+                Book.UserName = UserName;
+                var BackEndResponse = await _Dawa.AddNewDawaToTheSystem(Book);
+                await _js.InvokeVoidAsync("alert", BackEndResponse);
+                Book = new BookInfo();
+
+            }
+        }
+    }
+
+    private async Task CheckFile(InputFileChangeEventArgs UploadedFile)
+    {
+
+        //.png,.jpg,.jpeg,.pdf
+        if (UploadedFile.File.ContentType == "application/pdf")
+        {
+
+                await _js.InvokeVoidAsync("alert", "تم ارفاق الملف بنجاح");
+                UplaodedBookImage = UploadedFile;
+        
+        }
+        else
+        {
+            await _js.InvokeVoidAsync("alert", "نوع الملف غير مطابق");
+            return;
+        }
+    }
+
+    //private async Task CheckFile(InputFileChangeEventArgs UploadedFile)
+    //{
+
+    //    //.png,.jpg,.jpeg,.pdf
+    //    if (UploadedFile.File.ContentType == "image/png" || UploadedFile.File.ContentType == "image/jpeg"
+    //    || UploadedFile.File.ContentType == "image/pdf")
+    //    {
+    //        if (UploadedFile.File.Size > 2000000)
+    //        {
+    //            await _js.InvokeVoidAsync("alert", "يجب ان لا يزيد حجم الملف المرفق عن 5MB رجاءً");
+    //        }
+    //        else
+    //        {
+    //            await _js.InvokeVoidAsync("alert", "تم ارفاق الملف بنجاح");
+    //            UplaodedDawaImage = UploadedFile;
+    //        }
+
+    //    }
+    //    else
+    //    {
+    //        await _js.InvokeVoidAsync("alert", "نوع الملف غير مطابق");
+    //        return;
+    //    }
+    //}
+    private async Task<string> UploadDawaImageToFileSystem()
+    {
+        if (UplaodedBookImage is not null)
+        {
+            var FileName = Book.BookNo + "_" + Guid.NewGuid().ToString() + $"{UplaodedBookImage.File.Name}";
+            var FolderPath = $"{_env.WebRootPath}\\DawaImages";
+            var FullPath = Path.Combine(FolderPath, FileName);
+            var MemoryStream = new MemoryStream();
+            await UplaodedBookImage.File.OpenReadStream(5000000).CopyToAsync(MemoryStream);
+
+
+            // FileMode : to give permission to the filestream to create files
+            await using (var fs = new FileStream(FullPath, FileMode.Create, FileAccess.Write))
+            {
+                MemoryStream.WriteTo(fs);
+            }
+
+            return $"DawaImages\\{FileName}";
+        }
+        else
+        {
+            return "";
+        }
+
+
+    }
+    private async Task UpdateCurrentTime()
+    {
+        while (true)
+        {
+            Book.Update_Date = DateTime.Now;
+            StateHasChanged(); // Notify Blazor that the state has changed
+
+            await Task.Delay(1000); // Delay for 1 second
+        }
+    }
+}
+

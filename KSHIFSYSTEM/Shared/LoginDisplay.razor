@@ -1,0 +1,29 @@
+﻿@* <AuthorizeView>
+    <Authorized>
+        <a href="Identity/Account/Manage"><b style="color:#00695C"> <b>مرحبا بك</b>  @context.User.Identity?.Name </b></a>
+        <form method="post" action="Identity/Account/LogOut">
+           <button type="submit" class="btn btn-danger text-white" style="margin-right:20px; color:#00695C"> تسجيل الخروج </button>
+        </form>
+    </Authorized>
+    <NotAuthorized>
+        <a href="Identity/Account/Login"><MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Login" Color="Color.Transparent" Style="align-items:start; margin-left:20px"><b style="color:#00695C">تسجيل الدخول</b></MudButton></a>
+        <a href="Identity/Account/Register"><MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Transparent" Style="align-items:start"><b style="color:#00695C">انشاء حساب</b></MudButton></a>
+
+    </NotAuthorized>
+</AuthorizeView>
+ *@
+ ﻿<AuthorizeView>
+    <Authorized>
+        <a href="Identity/Account/Manage"><b style="color:#00695C"> <b>مرحبا بك</b>  @context.User.Identity?.Name </b></a>
+        <form method="post" action="Identity/Account/LogOut">
+            @*            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Login" Color="Color.Tertiary" Style="align-items:start"><b style="color:white">تسجيل الخروج</b></MudButton>
+            *@            <button type="submit" class="btn btn-danger text-white" style="margin-right:20px"> تسجيل الخروج </button>
+        </form>
+    </Authorized>
+    <NotAuthorized>
+        <a href="Identity/Account/Login"><MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Login" Color="Color.Transparent" Style="align-items:start; margin-left:20px"><b style="color:#00695C">تسجيل الدخول</b></MudButton></a>
+        <a href="Identity/Account/Register"><MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Transparent" Style="align-items:start"><b style="color:#00695C">انشاء حساب</b></MudButton></a>
+
+
+    </NotAuthorized>
+</AuthorizeView>

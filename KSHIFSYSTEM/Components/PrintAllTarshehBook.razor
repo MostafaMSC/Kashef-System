@@ -1,0 +1,133 @@
+﻿@page "/TarshehBookPrint"
+@* @using Append.Blazor.Printing
+@inject IPrintingService PR *@
+@inject IDawa _Dawa
+@inject IJSRuntime _js
+@inject ITarsheh _Tarsheh
+@inject ISnackbar _Sb
+@inject IDialogService _Dialog
+
+@attribute [Authorize(Roles = "admin,eatalaJazaea,DawaView")]
+
+
+<MudButton @onclick="printAll" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Print" Color="Color.Error"><b>طباعة</b></MudButton>
+
+<div id="Area1" class="print-table">
+    <MudTable Bordered="true" Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm">
+        <HeaderContent>
+            <MudTh>رقم الكتاب</MudTh>
+            <MudTh>رقم القطعة</MudTh>
+            <MudTh>اسم الجهة</MudTh>
+            <MudTh> المحافظة</MudTh>
+            <MudTh> نوع الكشف</MudTh>
+            <MudTh> تاريخ الكشف</MudTh>
+            <MudTh> اسم الخبير</MudTh>
+            <MudTh>اسم الخبير </MudTh>
+            <MudTh>اسم الخبير</MudTh>
+            <MudTh> اسم الخبير</MudTh>
+            <MudTh> اسم الخبير</MudTh>
+            <MudTh> اسم الخبير</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="رقم الكتاب">@context.BookNo</MudTd>
+            <MudTd DataLabel="رقم القطعة">@context.PlaceNo</MudTd>
+            <MudTd DataLabel="اسم الجهة">@context.JehaName</MudTd>
+            <MudTd DataLabel="المحافظة">@context.city</MudTd>
+            <MudTd DataLabel="نوع الكشف">@context.KshifType</MudTd>
+            <MudTd DataLabel="تاريخ الكشف ">@context.KshefDate.Value.ToString("dd-MM-yyyy")</MudTd>
+            <MudTd DataLabel="اسم الخبير">@context.SpecaialName1</MudTd>
+            <MudTd DataLabel="اسم الخبير">@context.SpecaialName2</MudTd>
+            <MudTd DataLabel="اسم الخبير">@context.SpecaialName3</MudTd>
+            <MudTd DataLabel="اسم الخبير">@context.SpecaialName4</MudTd>
+            <MudTd DataLabel="اسم الخبير">@context.SpecaialName5</MudTd>
+            <MudTd DataLabel="اسم الخبير ">@context.SpecaialName6</MudTd>
+
+
+        </RowTemplate>
+    </MudTable>
+</div>
+
+@code {
+    private List<string> _events = new();
+    private string _searchString;
+    private bool _sortNameByLength;
+
+    private IEnumerable<TarshehBook> Elements = new List<TarshehBook>();
+    public List<TarshehBook> ListOfDeletedBooks { get; set; } = new List<TarshehBook>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await _Tarsheh.GetAllTarshehBooks();
+    }
+    void RowClicked(DataGridRowClickEventArgs<TarshehBook> args)
+    {
+        _events.Insert(0, $"Event = RowClick, Index = {args.RowIndex}, Data = {System.Text.Json.JsonSerializer.Serialize(args.Item)}");
+    }
+
+    void SelectedItemsChanged(HashSet<TarshehBook> items)
+    {
+        _events.Insert(0, $"Event = SelectedItemsChanged, Data = {System.Text.Json.JsonSerializer.Serialize(items)}");
+        ListOfDeletedBooks = items.ToList();
+    }
+
+    //private async Task DeleteDawas()
+    //{
+    //    var Response = await _js.InvokeAsync<bool>("confirm", "هل انت متاكد من الحذف");
+    //    if (Response)
+    //    {
+    //        var BackEndREsponse = await _Dawa.DeleteListOfDawas(ListOfDeletedBooks.Select(a => a.Id).ToList());
+    //        _Sb.Add(BackEndREsponse, Severity.Success);
+    //        Elements = await _Dawa.GetAllDawas();
+    //    }
+    //    else
+    //    {
+    //        return;
+    //    }
+    //}
+    private async Task StartedEditingItemFunction(TarshehBook item)
+    {
+
+        //_Nav.NavigateTo($"/EditEmp/{item.Id}");
+        var Parameters = new DialogParameters();
+        Parameters.Add("Id", item.ID);
+        var ModalOptions = new DialogOptions();
+        ModalOptions.MaxWidth = MaxWidth.Medium;
+        ModalOptions.FullWidth = true;
+        ModalOptions.CloseButton = true;
+        ModalOptions.CloseOnEscapeKey = true;
+        ModalOptions.Position = DialogPosition.Center;
+
+        await _Dialog.ShowAsync<EditEmpDialog>("تحديث الكتاب", Parameters, ModalOptions);
+    }
+    private Func<TarshehBook, object> _sortBy => x =>
+    {
+        if (_sortNameByLength)
+            return x.SpecaialName1.Length;
+        else
+            return x.SpecaialName2;
+    };
+    // quick filter - filter gobally across multiple columns with the same input
+    private Func<TarshehBook, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.SpecaialName1.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        // if (x.DeptTable.OfficeTable.OfficeName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        //     return true;
+
+        if ($"{x.SpecaialName1} {x.BookNo.ToString()} {x.JehaName}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+
+    private async void printAll()
+    {
+        await _js.InvokeVoidAsync("print", "Area1");
+    }
+
+
+}

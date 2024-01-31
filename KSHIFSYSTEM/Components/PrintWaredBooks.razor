@@ -1,0 +1,174 @@
+﻿@page "/WaredBookPrint"
+@* @using Append.Blazor.Printing
+@inject IPrintingService PR *@
+@inject IDawa _Dawa
+@inject IJSRuntime _js
+@inject ISnackbar _Sb
+@inject IDialogService _Dialog
+@attribute [Authorize(Roles = "admin,eatalaJazaea,DawaView")]
+
+<MudButton @onclick="printAll" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Print" Color="Color.Error"><b>طباعة</b></MudButton>
+
+<div id="Area2" class="print-table">
+    <MudTable Bordered="true" Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm">
+        <HeaderContent>
+            <MudTh>رقم الكتاب</MudTh>
+            <MudTh>تاريخ الكتاب</MudTh>
+            <MudTh> رقم كتاب الوارد</MudTh>
+            <MudTh> تاريخ كتاب الوارد</MudTh>
+            <MudTh>اسم الجهة</MudTh>
+            <MudTh>رقم القطعة</MudTh>
+            <MudTh>رقم المقاطعة</MudTh>
+            <MudTh> رقم الوصل</MudTh>
+            <MudTh> تاريخ الوصل</MudTh>
+            <MudTh> المحافظة</MudTh>
+            <MudTh> نوع الكشف</MudTh>
+            <MudTh> تاريخ الكشف</MudTh>
+            <MudTh> عدد الخبراء</MudTh>
+            <MudTh> رقم استمارة المواطنين</MudTh>
+            <MudTh> رقم استمارة المواطنين</MudTh>
+            <MudTh> تاريخ استمارة الموجودات</MudTh>
+            <MudTh> تاريخ استمارة الموجودات</MudTh>
+            <MudTh> تاريخ التحديث</MudTh>
+            <MudTh> اسم المستخدم</MudTh>
+
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="رقم الكتاب"   >@context.BookNo</MudTd>
+                <MudTd DataLabel="تاريخ الكتاب" Format="dd.MM.yyyy">@context.BookDate.Value.ToString("yyyy-MM-dd")</MudTd>
+                <MudTd DataLabel="رقم كتاب الوارد">@context.HayaBookNo</MudTd>
+
+                <MudTd DataLabel="تاريخ كتاب الوارد">@context.HayaBookDate.Value.ToString("yyyy-MM-dd")</MudTd>
+                <MudTd DataLabel="اسم الجهة">@context.JahaName</MudTd>
+
+                <MudTd DataLabel="رقم القطعة">@context.PlaceNo</MudTd>
+                <MudTd DataLabel="رقم المقاطعة">@context.MokataNO</MudTd>
+                <MudTd DataLabel="رقم الوصل">@context.AlwasilNo</MudTd>
+                <MudTd DataLabel="تاريخ الوصل">@context.AlwasilDate.Value.ToString("yyyy-MM-dd")</MudTd>
+
+            <MudTd DataLabel="المحافظة">@context.City</MudTd>
+                <MudTd DataLabel="نوع الكشف">@context.KashefType</MudTd>
+                <MudTd DataLabel="تاريخ الكشف">@context.KshefDate.Value.ToString("yyyy-MM-dd")</MudTd>
+
+            <MudTd DataLabel="عدد الخبراء">@context.AddadAlkhobraa</MudTd>
+                <MudTd DataLabel="رقم استمارة الموجودات">@context.AstmaraNoM</MudTd>
+                <MudTd DataLabel="رقم استمارة المواطنين">@context.AstmaraNoP</MudTd>
+
+                <MudTd DataLabel=" تاريخ استمارةالموجودات">@context.AstmaraDateM.Value.ToString("yyyy-MM-dd")</MudTd>
+                <MudTd DataLabel=" تاريخ استمارة الموجودات">@context.AstmaraDateP.Value.ToString("yyyy-MM-dd")</MudTd>
+                <MudTd DataLabel="تاريخ التحديث">@context.Update_Date</MudTd>
+                <MudTd DataLabel="اسم المستخدم">@context.UserName</MudTd>
+
+
+
+
+
+        </RowTemplate>
+    </MudTable>
+@*     <MudDataGrid MultiSelection="false" 
+                 
+                 T="BookInfo"  Items="@Elements"
+                >
+        
+         <Columns>
+             <SelectColumn T="BookInfo" />
+             <PropertyColumn Property="x => x.BookNo" Title="رقم الكتاب" />
+             <PropertyColumn Property="x => x.BookDate" Title=" تاريخ الكتاب" />
+             <PropertyColumn Property="x => x.JahaName" Title="اسم الجهة" />
+             <PropertyColumn Property="x => x.PlaceNo" Title="رقم القطعة" />
+             <PropertyColumn Property="x => x.AddadAlkhobraa" Title="عدد الخبراء" />
+             <PropertyColumn Property="x => x.City" Title="المحافظة" />
+             <PropertyColumn Property="x => x.KashefType" Title="نوع الكشف" />
+             <PropertyColumn Property="x => x.KshefDate" Title=" تاريخ الكشف" />
+             
+         </Columns>
+         
+     </MudDataGrid>
+ *@ </div>
+
+ @code {
+    private List<string> _events = new();
+    private IEnumerable<BookInfo> Elements = new List<BookInfo>();
+    public List<BookInfo> ListOfDeletedBooks { get; set; } = new List<BookInfo>();
+    private string _searchString;
+    private bool _sortNameByLength;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await _Dawa.GetAllDawas();
+    }
+    void RowClicked(DataGridRowClickEventArgs<BookInfo> args)
+    {
+        _events.Insert(0, $"Event = RowClick, Index = {args.RowIndex}, Data = {System.Text.Json.JsonSerializer.Serialize(args.Item)}");
+    }
+
+    void SelectedItemsChanged(HashSet<BookInfo> items)
+    {
+        _events.Insert(0, $"Event = SelectedItemsChanged, Data = {System.Text.Json.JsonSerializer.Serialize(items)}");
+        ListOfDeletedBooks = items.ToList();
+    }
+
+    private async Task DeleteDawas()
+    {
+        var Response = await _js.InvokeAsync<bool>("confirm", "هل انت متاكد من الحذف");
+        if (Response)
+        {
+            var BackEndREsponse = await _Dawa.DeleteListOfDawas(ListOfDeletedBooks.Select(a => a.Id).ToList());
+            _Sb.Add(BackEndREsponse, Severity.Success);
+            Elements = await _Dawa.GetAllDawas();
+        }
+        else
+        {
+            return;
+        }
+    }
+
+
+    private async void printAll()
+    {
+        await _js.InvokeVoidAsync("print", "Area2");
+    }
+
+
+    private async Task StartedEditingItemFunction(BookInfo item)
+    {
+
+        //_Nav.NavigateTo($"/EditEmp/{item.Id}");
+        var Parameters = new DialogParameters();
+        Parameters.Add("Id", item.Id);
+        var ModalOptions = new DialogOptions();
+        ModalOptions.MaxWidth = MaxWidth.Medium;
+        ModalOptions.FullWidth = true;
+        ModalOptions.CloseButton = true;
+        ModalOptions.CloseOnEscapeKey = true;
+        ModalOptions.Position = DialogPosition.Center;
+
+        await _Dialog.ShowAsync<EditEmpDialog>("تحديث الكتاب", Parameters, ModalOptions);
+    }
+    private Func<BookInfo, object> _sortBy => x =>
+    {
+        if (_sortNameByLength)
+            return x.JahaName.Length;
+        else
+            return x.BookDate;
+    };
+    // quick filter - filter gobally across multiple columns with the same input
+    private Func<BookInfo, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.JahaName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        // if (x.DeptTable.OfficeTable.OfficeName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        //     return true;
+
+        if ($"{x.BookNo} {x.BookDate.ToString()} {x.City}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+}

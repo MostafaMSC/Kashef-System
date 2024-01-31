@@ -1,0 +1,107 @@
+﻿@page "/timeline"
+
+@inject IDawa _Dawa
+@inject ITarsheh _Tarsheh
+
+@attribute [Authorize(Roles = "admin,eatalaJazaea,DawaView")]
+
+<PageTitle> تتبع الكتب  </PageTitle>
+<form class="form-control" style="background-color:white">
+
+    <center>
+        <label style="font-size:20px; margin-top:20px">رقم الكتاب</label>
+        <br />
+        <input style="width:200px; margin-bottom:20px" type="int" class="form-control" placeholder="ادخل رقم الكتاب" @bind-value="@BOOKNO" />
+        <br />
+        <MudButton OnClick="SpecificTimeLine" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.TrackChanges" IconColor="Color.Tertiary" Size="Size.Large"><b style="color:#00695C">تتبع الكتاب</b></MudButton>
+
+       <br />
+    </center>
+    <br />
+    <MudTimeline Style="margin:30px">
+        @if (Stage1)
+        {
+            <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success">
+                <MudText Typo="Typo.button">تم ادخال الكتاب الوارد في النظام</MudText>
+@*                 <MudText Typo="Typo.body2" on Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+ *@            </MudTimelineItem>
+        }
+        else
+        {
+            <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default">
+                <MudText Typo="Typo.button">تم ادخال الكتاب الوارد في النظام</MudText>
+@*                 <MudText Typo="Typo.body2" on Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+ *@            </MudTimelineItem>
+        }
+        @if (Stage2)
+        {
+            <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success" TimelineAlign="TimelineAlign.End">
+                <MudText Typo="Typo.body2"> تم ترشيح الخبراء</MudText>
+@*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+ *@            </MudTimelineItem>
+
+        }
+        else
+        {
+            <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default" TimelineAlign="TimelineAlign.End">
+                <MudText Typo="Typo.body2"> تم ترشيح الخبراء</MudText>
+@*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+ *@            </MudTimelineItem>
+        }
+        @if (Stage3 == false)
+        {
+            <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default" TimelineAlign="TimelineAlign.End">
+                <MudText Typo="Typo.body2">خرج الى الكشف ولم يسلم التقرير</MudText>
+@*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+ *@            </MudTimelineItem>
+        }
+        else
+        {
+            <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success" TimelineAlign="TimelineAlign.End">
+                <MudText Typo="Typo.body2"> خرج الى الكشف ولم يسلم التقرير</MudText>
+@*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+ *@            </MudTimelineItem>
+        }
+        @if (Stage4 == false)
+        {
+            <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default" TimelineAlign="TimelineAlign.End">
+                <MudText Typo="Typo.body2">تم اجراء الكشف وتسليم التقرير</MudText>
+                @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+            *@
+            </MudTimelineItem>
+        }
+        else
+        {
+            <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success" TimelineAlign="TimelineAlign.End">
+                <MudText Typo="Typo.body2"> تم اجراء الكشف وتسليم التقرير</MudText>
+                @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+            *@
+            </MudTimelineItem>
+        }
+    </MudTimeline>
+</form>
+
+@code
+{
+    public int BOOKNO;
+    // public BookInfo WaredBook = new BookInfo();
+    public bool Stage1;
+    public bool Stage2;
+    public bool Stage3;
+    public bool Stage4;
+
+    private async Task SpecificTimeLine()
+    {
+        var TarshehBR = await _Tarsheh.GetOneBook(BOOKNO);
+        var WaredStage = await _Dawa.CheckIfBookExist(BOOKNO);
+        var TarshehStage = await _Tarsheh.CheckIfBookExistsInDB(BOOKNO);
+        var TarshehStage2 = await _Tarsheh.CheckIfTheBookResultsAddedPIC(BOOKNO);
+
+        Stage1 = WaredStage;
+        Stage2 = TarshehStage;
+        Stage3 = TarshehBR;
+        Stage4 = TarshehStage2;
+
+
+    }
+}

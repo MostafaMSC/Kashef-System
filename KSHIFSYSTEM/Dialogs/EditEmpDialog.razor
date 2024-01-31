@@ -1,0 +1,286 @@
+﻿
+@inject IJSRuntime _js
+@inject IWebHostEnvironment _env
+@inject NavigationManager _navigationManager
+@inject IDawa _Dawa
+@inject ISnackbar _Sb
+
+@attribute [Authorize(Roles = "admin,eatalaJazaea")]
+
+
+<div  style=" direction:rtl; border:solid;padding:20px; margin:20px;background-color:white;border-color:lightblue;border-radius:20px;">
+
+    <EditForm Model="EmployeeViewModel" OnValidSubmit="EditData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2">
+            <div class="col" style="align-content:end">
+                <MudItem>
+                    <MudTextField Required="true" Style="background-color:white" Label="رقم الكتاب" T="int" Variant="Variant.Outlined" @bind-Value="@EmployeeViewModel.BookNo" />
+                </MudItem>
+
+            </div>
+
+            <div class="col">
+
+                <MudItem>
+                    <MudDatePicker Required="true" Label="تاريخ الكتاب الوارد" Editable="true" @bind-Date="@EmployeeViewModel.BookDate" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل تاريخ الكتاب" />
+                </MudItem>
+            </div>
+
+            <div class="col">
+                <MudItem>
+                    <MudTextField Required="true" Style="background-color:white" Label="رقم وارد الهيئة" T="int?" Variant="Variant.Outlined" @bind-Value="@EmployeeViewModel.HayaBookNo" />
+                </MudItem>
+
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudDatePicker Required="true" Label="تاريخ وارد الهيئة" Editable="true" @bind-Date="@EmployeeViewModel.HayaBookDate" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل تاريخ الكتاب" />
+                </MudItem>
+
+            </div>
+
+            <br />
+        </div>
+        <br />
+
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2">
+            <div class="col">
+
+                <MudItem>
+                    <MudTextField Required="true" Style="background-color:white" Label="رقم القطعة" T="string" Variant="Variant.Outlined" @bind-Value="@EmployeeViewModel.PlaceNo" />
+                </MudItem>
+            </div>
+            <div class="col">
+
+                <MudItem>
+                    <MudTextField Required="true" Style="background-color:white" Label="رقم المقاطعة" T="string" Variant="Variant.Outlined" @bind-Value="@EmployeeViewModel.MokataNO" />
+                </MudItem>
+            </div>
+
+            <div>
+                <MudItem>
+                    <MudSelect Required="true" Style="background-color:white" T="string" @bind-Value="@EmployeeViewModel.City" Label="اختر المحافظة من فضلك" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@("  بغداد")"> بغداد </MudSelectItem>
+                        <MudSelectItem Value="@("  البصرة")">البصرة  </MudSelectItem>
+                        <MudSelectItem Value="@(" الديوانية ")"> الديوانية </MudSelectItem>
+                        <MudSelectItem Value="@("العمارة")">العمارة</MudSelectItem>
+                        <MudSelectItem Value="@("الموصل")">الموصل</MudSelectItem>
+                        <MudSelectItem Value="@("كركوك")">كركوك</MudSelectItem>
+                        <MudSelectItem Value="@("دهوك")">الموصل</MudSelectItem>
+                        <MudSelectItem Value="@("كربلاء")">كربلاء</MudSelectItem>
+                        <MudSelectItem Value="@("النجف")">النجف</MudSelectItem>
+                        <MudSelectItem Value="@("ديالى")">ديالى</MudSelectItem>
+                        <MudSelectItem Value="@("اربيل")">اربيل</MudSelectItem>
+                        <MudSelectItem Value="@("انبار")">انبار</MudSelectItem>
+                        <MudSelectItem Value="@("بابل")">بابل</MudSelectItem>
+                        <MudSelectItem Value="@("سليمانية")">سليمانية</MudSelectItem>
+                        <MudSelectItem Value="@("صلاح الدين")">صلاح الدين</MudSelectItem>
+                        <MudSelectItem Value="@(" المثنى")"> المثنى</MudSelectItem>
+                        <MudSelectItem Value="@(" ميسان")"> ميسان</MudSelectItem>
+                        <MudSelectItem Value="@(" الكوت")"> الكوت</MudSelectItem>
+
+                    </MudSelect>
+                </MudItem>
+
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudItem>
+
+                        <MudSelect Required="true" Style="background-color:white" Label="نوع الكشف" T="string" Variant="Variant.Outlined" @bind-Value="@EmployeeViewModel.KashefType">
+                            <MudSelectItem Value="@("")"> أختر نوع الكشف</MudSelectItem>
+                            <MudSelectItem Value="@("محاكم")">محاكم</MudSelectItem>
+                            <MudSelectItem Value="@("عقارات دولة")">عقارات دولة </MudSelectItem>
+                        </MudSelect>
+                    </MudItem>
+                </MudItem>
+            </div>
+
+
+        </div>
+
+        <br />
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-1">
+
+            <div class="col">
+                <MudItem>
+                    <MudTextField Required="true" Style="background-color:white" Label="اسم جهة الاصدار والمقاطعة" T="string" Variant="Variant.Outlined" @bind-Value="@EmployeeViewModel.JahaName" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudDatePicker Label="تاريخ  الكشف" Editable="true" @bind-Date="@EmployeeViewModel.KshefDate" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Style="background-color:white" Label="عدد الخبراء " T="int?" Variant="Variant.Outlined" @bind-Value="@EmployeeViewModel.AddadAlkhobraa" />
+                </MudItem>
+            </div>
+
+        </div>
+        <br />
+
+        <div>
+            <center><MudText Typo="Typo.h5" Style="color:#00695C"> استمارة شؤون المواطنين    </MudText></center>
+
+            <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1" style="border:solid;padding:20px; border-color:#00695C;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Required="true" Style="background-color:white" Label="رقم الاستمارة" T="int?" Variant="Variant.Outlined" @bind-Value="@EmployeeViewModel.AstmaraNoP" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                        <MudDatePicker Required="true" Label="تاريخ  الاستمارة" Editable="true" @bind-Date="@EmployeeViewModel.AstmaraDateP" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
+                    </MudItem>
+                </div>
+            </div>
+            <br />
+            <br />
+            <center><MudText Typo="Typo.h5" Style="color:#00695C"> استمارة من قسم الموجودات    </MudText></center>
+
+
+            <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1" style="border:solid;padding:20px; border-color:#00695C;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Required="true" Style="background-color:white" Label="رقم الاستمارة" T="int?" Variant="Variant.Outlined" @bind-Value="@EmployeeViewModel.AstmaraNoM" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                        <MudDatePicker Required="true" Label="تاريخ  الاستمارة" Editable="true" @bind-Date="@EmployeeViewModel.AstmaraDateM" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
+                    </MudItem>
+                </div>
+            </div>
+        </div>
+
+        <div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <MudItem>
+                    <MudTextField Required="true" Style="background-color:white" Label="رقم الوصل" T="int?" Variant="Variant.Outlined" @bind-Value="@EmployeeViewModel.AlwasilNo" />
+                </MudItem>
+            </div>
+
+            <div class="col">
+                <MudItem>
+                    <MudDatePicker Required="true" Label="تاريخ  الوصل" Editable="true" @bind-Date="@EmployeeViewModel.AlwasilDate" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
+                </MudItem>
+            </div>
+        </div>
+        <div>
+            <label style="font-size:20px;margin:20px">صورة الكتاب</label>
+            <MudItem>
+                <InputFile Required="true" accept=".pdf" class="form-control" style="background-color:transparent" OnChange="CheckFile" />
+            </MudItem>
+        </div>
+        <br />
+        <div>
+            <MudItem>
+                <iframe src="@EmployeeViewModel.BookPic" style="border: none;width:300px;height:150px;align-content:center "></iframe>
+        </MudItem>
+        </div>
+
+        <br />
+        <MudButton ButtonType="ButtonType.Submit" @onclick='() => _navigationManager.NavigateTo("../viewBooks")' FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Success" Size="Size.Large">حفظ الدعوى </MudButton>
+    </EditForm>
+</div>
+
+
+@code{
+
+
+    [CascadingParameter] 
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+    public InputFileChangeEventArgs UplaodedDawaImage { get; set; }
+
+    public EmpViewModel EmployeeViewModel { get; set; } = new EmpViewModel();
+
+    private async Task EditData()
+    {
+        if (UplaodedDawaImage is null)
+        {
+            var Response = await _Dawa.EditEmpViewModel(EmployeeViewModel);
+            _Sb.Add(Response, Severity.Info);
+
+        }
+        else
+        {
+            var ImagePath = await UploadUserImageToFileSystem();
+            if (ImagePath is null || ImagePath == "")
+            {
+                _Sb.Add("Please Reupload the image please", Severity.Warning);
+            }
+            else
+            {
+                var ImagePathToBeDeleted = $"{_env.WebRootPath}\\{EmployeeViewModel.BookPic}";
+                File.Delete(ImagePathToBeDeleted);
+                EmployeeViewModel.BookPic = ImagePath;
+                var Response = await _Dawa.EditEmpViewModel(EmployeeViewModel);
+                _Sb.Add(Response, Severity.Info);
+            }
+        }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        EmployeeViewModel = await _Dawa.GetEmpViewModelByUserId(Id);
+    }
+
+
+    private async Task<string> UploadUserImageToFileSystem()
+    {
+        if (UplaodedDawaImage is not null)
+        {
+            var FileName = EmployeeViewModel.BookNo + "_" + Guid.NewGuid().ToString() + $"{UplaodedDawaImage.File.Name}";
+            var FolderPath = $"{_env.WebRootPath}\\DawaImages";
+            var FullPath = Path.Combine(FolderPath, FileName);
+            var MemoryStream = new MemoryStream();
+            await UplaodedDawaImage.File.OpenReadStream(5000000).CopyToAsync(MemoryStream);
+
+
+            // FileMode : to give permission to the filestream to create files
+            await using (var fs = new FileStream(FullPath, FileMode.Create, FileAccess.Write))
+            {
+                MemoryStream.WriteTo(fs);
+            }
+
+            return $"DawaImages\\{FileName}";
+        }
+        else
+        {
+            return "";
+        }
+
+
+    }
+
+    private async Task CheckFile(InputFileChangeEventArgs UploadedFile)
+    {
+
+        //.png,.jpg,.jpeg,.pdf
+        if (UploadedFile.File.ContentType == "application/pdf")
+        {
+
+            await _js.InvokeVoidAsync("alert", "تم ارفاق الملف بنجاح");
+            UplaodedDawaImage = UploadedFile;
+
+
+        }
+        else
+        {
+            await _js.InvokeVoidAsync("alert", "نوع الملف غير مطابق");
+            return;
+        }
+    }
+
+}

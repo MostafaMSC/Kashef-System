@@ -1,0 +1,83 @@
+﻿@page "/AddTotalKshoat"
+@inject IJSRuntime _js
+@inject IWebHostEnvironment _env
+@inject ApplicationDbContext _db
+@inject ITotalKshofat _Kshif
+
+<br />
+<center><MudText Typo="Typo.h4" Color="Color.Info"> اضافة خبير</MudText></center>
+<br />
+<div style="border:solid;padding:20px; border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+    <EditForm OnValidSubmit="SaveData" Model="Specialest">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2">
+            <div class="col" style="align-content:end">
+                <MudItem>
+                    <MudTextField Label="اسم الخبير" T="string" Variant="Variant.Outlined" @bind-Value="@Specialest.Name" />
+                </MudItem>
+
+            </div>
+            
+            <div class="col">
+
+                <MudItem>
+                    <MudTextField Label="عدد كشوفات المحاكم" @onchange="Mahakem" T="int" Variant="Variant.Outlined" @bind-Value="@Specialest.KshofatNoMahakem" />
+                </MudItem>
+            </div>
+            <div class="col">
+
+                <MudItem>
+                    <MudTextField Label="عدد كشوفات العقارات" @onchange="Agarat" T="int" Variant="Variant.Outlined" @bind-Value="@Specialest.KshodatNOAqaraat" />
+                </MudItem>
+            </div>
+            <div class="col">
+
+                <MudItem>
+                    <MudTextField Label="مجموع عدد الكشوفات"  @bind-Value="@Specialest.TotalKshofat" Variant="Variant.Outlined" />
+                </MudItem>
+            </div>
+            
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="العنوان الوظيفي" T="string" Variant="Variant.Outlined" @bind-Value="@Specialest.JobTitle" />
+                </MudItem>
+                <br />
+            </div>
+            <br />
+            <br />
+            <MudButton ButtonType="ButtonType.Submit" FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Size="Size.Large"><b>حفظ الكتاب</b></MudButton>
+
+            <br />
+            <br />
+        </div>
+    </EditForm>
+</div>
+@code {
+    public TotalKsofatModule Specialest { get; set; } = new TotalKsofatModule();
+    public EventCallback Mahakem;
+    public EventCallback Agarat;
+    public EventCallback TotalKshofat;
+
+
+
+
+    private async Task SaveData()
+    {
+        var UserResponse = await _js.InvokeAsync<bool>("confirm", "هل تود اضافة الخبير الى النظام؟");
+        if (UserResponse)
+        {
+            var CheckUserExists = await _Kshif.CheckIfSpecialestExistsInDB(Specialest);
+            if (CheckUserExists is true)
+            {
+                await _js.InvokeVoidAsync("alert", $"هذا  الخبير : {Specialest.Name} موجود في النظام مسبقاً");
+            }
+            else
+            {
+                var BackEndResponse = await _Kshif.AddNewSpecialestToTheSystem(Specialest);
+                await _js.InvokeVoidAsync("alert", BackEndResponse);
+                Specialest = new TotalKsofatModule();
+            }
+        }
+    }
+}

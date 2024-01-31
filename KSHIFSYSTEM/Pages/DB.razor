@@ -1,0 +1,174 @@
+﻿@page "/"
+@inject NavigationManager _nav
+@inject ITarsheh _Tarsheh
+@inject IDawa _wared
+
+@inject IKshifInfo _sp
+@using System;
+@using System.Threading;
+@attribute [Authorize(Roles = "admin,eatalaJazaea,DawaView")]
+<PageTitle> الصفحة الرئيسية  </PageTitle>
+
+<style>
+    .div
+    {
+        background-color:white;
+        transition: transform 0.3s ease;
+    }
+    .div:hover{
+            transform: scale(1.2);
+        }
+
+
+
+
+</style>
+
+
+
+
+<div style="border-radius:20px;background-color:floralwhite; margin:10px; padding:50px" class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-1 text-center">
+    <div style="margin-bottom:10px">
+        <MudCard Class="div" Style="height:240px;overflow: auto" Elevation="15">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6"><b>ادخال الكتب الواردة للترشيح </b></MudText>
+            </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Success" />
+                </CardHeaderActions>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText>من هنا يتم ملىء البيانات الخاصة بكل كتاب وارد من الهيئة لترشيح الخبراء</MudText>
+                
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" OnClick="@(()=>_nav.NavigateTo("/wared"))" Color="Color.Primary">اذهب الى صفحة ادخال الكتب الواردة</MudButton>
+        </MudCardActions>
+        </MudCard>
+	</div>
+    <div class="col" style="margin-bottom:10px">
+        <MudCard Class="div" Elevation="15" Style="height:240px;overflow: auto">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6"><b> سجل الكتب الواردة للترشيح</b></MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Book" Color="Color.Primary" />
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>استعراض المعلومات الخاصة بكل كتاب وارد لترشيح الخبراء</MudText>
+                <MudText Typo="Typo.body2"><b>العدد الكلي للكتب الواردة :</b>  @Wared.Count()         </MudText>
+                <MudText Typo="Typo.body2"> <b> عدد كتب المحاكم :</b>@Wared.Where(a=>a.KashefType == "محاكم").Count()    <b>عدد كتب العقارات : </b>@Wared.Where(a=>a.KashefType == "عقارات دولة").Count()  </MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Text" OnClick="@(()=>_nav.NavigateTo("/viewBooks"))" Color="Color.Primary">الذهاب الى صفحة السجل</MudButton>
+            </MudCardActions>
+        </MudCard>
+	</div>
+
+
+    <div class="col" style="margin-bottom:40px">
+        <MudCard Class="div" Elevation="15" Style="height:240px;overflow: auto">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6"><b>سجل كتب الترشيح</b></MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.DonutLarge" Color="Color.Error" />
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>استعراض المعلومات الخاصة بكتب الترشيح</MudText>
+                <MudText Typo="Typo.body2"><b>العدد الكلي لكتب الترشيح :</b>  @Tarsheh.Count()</MudText>
+                <MudText Typo="Typo.body2"> <b> عدد كتب المحاكم :</b>@Tarsheh.Where(a=>a.KshifType == "محاكم").Count()   </MudText>
+                <MudText Typo="Typo.body2"><b>عدد كتب العقارات : </b>@Tarsheh.Where(a=>a.KshifType == "عقارات دولة").Count()   </MudText>
+
+             </MudCardContent>
+            <MudCardActions>
+                <MudButton OnClick="@(()=>_nav.NavigateTo("/viewAllTarshehBooks"))" Variant="Variant.Text" Color="Color.Primary">الذهاب الى صفحة السجل</MudButton>
+            </MudCardActions>
+        </MudCard>
+	</div>
+
+    <div class="col" style="margin-bottom:10px">
+        <MudCard Class="div" Elevation="15" Style="height:240px;overflow: auto">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6"><b> ادخال معلومات الخبراء </b></MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Info" Color="Color.Warning" />
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>من هنا يتم ملىء البيانات الخاصة بكل خبير</MudText>
+                   
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Text" OnClick="@(()=>_nav.NavigateTo("/AddSpecial"))" Color="Color.Primary">الذهاب الى صفحة اضافة الخبراء</MudButton>
+            </MudCardActions>
+        </MudCard>
+	</div>
+    <div class="col" style="margin-bottom:10px">
+        <MudCard Class="div" Elevation="15" Style="height:240px;overflow: auto">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6"><b> سجل الخبراء </b></MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Face" Color="Color.Tertiary" />
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>من هنا يتم استعراض البيانات الخاصة بكل خبير</MudText>
+                <MudText Typo="Typo.body2"><b>العدد الكلي الخبراء :</b> @Specialest.Count()</MudText>
+                <MudText Typo="Typo.body2"> <b> عدد خبراء المحاكم :</b>@Specialest.Where(a=>a.KshifType == "محاكم").Count()  <b>عدد خبراء العقارات : </b>@Specialest.Where(a=>a.KshifType == "عقارات دولة").Count()   </MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Text" OnClick="@(()=>_nav.NavigateTo("/allSpecial"))" Color="Color.Primary">الذهاب الى صفحة اضافة الخبراء</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </div>
+
+    <div class="col" style="margin-bottom:10px">
+
+        <MudCard Class="div" Elevation="15" Style="height:240px;overflow: auto">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6"><b>سجل المستخدمين</b></MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.People" Color="Color.Secondary" />
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>من هنا يتم ملىء البيانات الخاصة بكل مستخدم</MudText>
+@*                 <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+ *@            </MudCardContent>
+            <MudCardActions>
+                <MudButton OnClick="@(()=>_nav.NavigateTo("/SystemUsers"))" Variant="Variant.Text" Color="Color.Primary"> الذهاب الى صفحة ادارة مستخدمي النظام</MudButton>
+            </MudCardActions>
+        </MudCard>
+	</div>
+
+
+</div>
+
+@code {
+
+
+    private IEnumerable<TarshehBook> Tarsheh = new List<TarshehBook>();
+    private IEnumerable<BookInfo> Wared = new List<BookInfo>();
+    private IEnumerable<KshfInfoModule> Specialest = new List<KshfInfoModule>();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Tarsheh = await _Tarsheh.GetAllTarshehBooks();
+        Wared = await _wared.GetAllDawas();
+        Specialest = await _sp.GetAllSpecialest();
+    }
+
+}

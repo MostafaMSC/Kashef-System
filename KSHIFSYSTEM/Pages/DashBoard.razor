@@ -1,0 +1,565 @@
+﻿@page "/specialest"
+@inject IDawa _Dawa
+@inject IKshifInfo _kshif
+@inject IJSRuntime _JS
+@inject ISnackbar _SB
+@inject ITarsheh _TR
+@inject ApplicationDbContext _DB
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<script>
+    function updateCurrentTime() {
+        CurrentTime = document.querySelector('updateTime');
+        updateTime.innerText = CurrentTime;
+    }
+        }
+    setInterval(updateCurrentTime, 1000);
+</script>
+<script src="/javascript/printreport.js"></script>
+@attribute [Authorize(Roles = "admin,eatalaJazaea")]
+<PageTitle>ترشيح للخبراء </PageTitle>
+
+<div class="row row-col-lg-2 row-col-md-1 row-col-sm-1">
+    <MudAlert Style="font-size:large" Severity="Severity.Success" Square="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Class="my-2" id="updateTime">
+        @(BookRecord.Update_Date.HasValue ? BookRecord.Update_Date.Value.ToString("dd/MM/yyyy | hh:mm:ss") : "No Date")
+    </MudAlert>
+    <div class="col" style="border:solid;padding:20px; border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+        <EditForm OnValidSubmit="SaveData" Model="Tarsheh">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div>
+                <input class="form-control" type="text" placeholder="ادخل رقم الكتاب" @onchange="ChoseBook" />
+            </div>
+            <br />
+
+
+            
+            <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1">
+                <div class="col" style="align-content:end">
+
+                    <MudItem>   
+
+                        <Select @onclick="StatusValue" class="form-control" T="string" @onchange="@((ChangeEventArgs args)=>SearchValue(args ))" Label="اختر نوع الخبراء من فضلك" Variant="Variant.Outlined">
+                            <option Value="@("")"> أختر نوع الكشف </option>
+                            <option Value="@("محاكم")">محاكم</option>
+                            <option Value="@("عقارات دولة")">عقارات دولة  </option>
+                        </Select>
+                    </MudItem>
+                </div>
+                <div class="row row-cols-lg-1 row-cols-md-1 row-cols-sm-1 row-cols-1">
+                    <div class="col" style="align-content:end">
+                        <MudSlider Value:Immediate="@sliderValue" @onchange="@((ChangeEventArgs args)=>SelectSpecialestsRandomley(args))" Min="0" Max="16" Size="Size.Medium" Color="Color.Success" Style="color:white;">عدد الخبراء: @sliderValue.ToString()</MudSlider>
+                    </div>
+                </div>
+                <br />
+
+            </div>
+ 
+            <div >
+                <MudItem >
+                    <MudTextField Style="background-color:white"  Label="اسم جهة الطلب" T="string" Variant="Variant.Outlined" @bind-Value="@BookRecord.JahaName" />
+                </MudItem>
+            </div>
+            <br />
+            <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1">
+                <div class="col">
+                    <MudItem>
+                            <MudTextField Style="background-color:white" Label="رقم الكتاب" T="int" Variant="Variant.Outlined" @bind-Value="BookRecord.BookNo" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                            <MudTextField Style="background-color:white" Label="تاريخ الكتاب" T="DateTime?" Variant="Variant.Outlined" @bind-Value="BookRecord.BookDate" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Style="background-color:white" Label=" رقم كتاب الوارد " T="int?" Variant="Variant.Outlined" @bind-Value="BookRecord.HayaBookNo" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                            <MudTextField Style="background-color:white" Label="تاريخ كتاب الوارد" T="DateTime?" Variant="Variant.Outlined" @bind-Value="BookRecord.HayaBookDate" />
+                    </MudItem>
+                </div>
+
+            </div>
+            <br />
+            <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 ">
+                <div class="col">
+                    <MudItem>
+                            <MudTextField Style="background-color:white" Label="رقم القطعة" T="string" Variant="Variant.Outlined" @bind-Value="BookRecord.PlaceNo" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                            <MudTextField Style="background-color:white" Label="رقم المقاطعة" T="string" Variant="Variant.Outlined" @bind-Value="BookRecord.MokataNO" />
+                    </MudItem>
+                </div>
+                
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Style="background-color:white" Label=" نوع الكشف" T="string" Variant="Variant.Outlined" @bind-Value="BookRecord.KashefType" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Style="background-color:white" Label=" تاريخ الكشف" T="DateTime?" Variant="Variant.Outlined" @bind-Value="BookRecord.KshefDate" />
+                    </MudItem>
+                </div>
+                
+      
+            </div>
+            <br />
+            <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 ">
+                    <div class="col">
+                        <MudItem>
+                            <MudTextField Style="background-color:white" Label="عدد الخبراء " T="int?" Variant="Variant.Outlined" @bind-Value="BookRecord.AddadAlkhobraa" />
+                        </MudItem>
+                    </div>
+                    <div class="col">
+                        <MudItem>
+                            <MudTextField Style="background-color:white" Label="المحافظة" T="string" Variant="Variant.Outlined" @bind-Value="BookRecord.City" />
+                        </MudItem>
+                    </div>
+            </div>
+            <br />
+            <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-2 row-cols-1 ">
+
+                
+
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Style="background-color:white" Label="  رقم الاستمارة لقسم شؤون المواطنين" T="int?" Variant="Variant.Outlined" @bind-Value="BookRecord.AstmaraNoP" />
+                    </MudItem>
+                </div>
+                    <div class="col">
+                        <MudItem>
+                            <MudTextField Style="background-color:white" Label=" تاريخ الاستمارة لقسم شؤون المواطنين" T="DateTime?" Variant="Variant.Outlined" @bind-Value="BookRecord.AstmaraDateP" />
+                        </MudItem>
+                    </div>
+            </div>
+            
+            <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-2 row-cols-1 ">
+                
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Style="background-color:white" Label="  رقم الاستمارة لقسم الموجودات" T="int?" Variant="Variant.Outlined" @bind-Value="BookRecord.AstmaraNoM" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Style="background-color:white" Label=" تاريخ الاستمارة لقسم الموجودات " T="DateTime?" Variant="Variant.Outlined" @bind-Value="BookRecord.AstmaraDateM" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Style="background-color:white" Label="  رقم الوصل" T="int?" Variant="Variant.Outlined" @bind-Value="BookRecord.AlwasilNo" />
+                    </MudItem>
+                </div>
+                <div class="col">
+                    <MudItem>
+                        <MudTextField Style="background-color:white" Label=" تاريخ الوصل" T="DateTime?" Variant="Variant.Outlined" @bind-Value="BookRecord.AlwasilDate" />
+                    </MudItem>
+                </div>
+            </div>
+
+            <center><h6 style="color:aquamarine;margin:20px"> <b>إشارة الى الكتاب الوارد الينا اعلاه نرشح السادة المدرجة اسمائهم ادناه:</b></h6></center>
+            
+            <div class="row row-cols-4">
+                
+                @foreach (var Special in Element)
+                {
+                    <div class="col">
+                        <MudCard Outlined="true">
+
+                            <MudCardContent>
+
+                                <MudText @bind-value="@Special1" Typo="Typo.body2">@Special</MudText>
+                            </MudCardContent>
+                            
+                        </MudCard>
+                    </div>
+                }
+            <br />
+            </div>
+            <br />
+            <MudButton ButtonType="ButtonType.Submit" FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Tertiary" Size="Size.Large"><b style="color:aquamarine">حفظ الكتاب</b></MudButton>
+
+            <br />
+            <br />
+        </EditForm>
+    </div>
+    <br />
+     <MudDataGrid Class="col" HorizontalScrollbar="true" Striped="true" Elevation="18" Bordered="true"
+                 Style="background-color:whitesmoke; border:solid;padding:20px;border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px"
+                 T="KshfInfoModule" MultiSelection="false" Items="@Elements" SortMode="SortMode.None" Filterable="true"
+                 QuickFilter="@_quickFilter" Hideable="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h5">الخبراء</MudText>
+            <MudSpacer />
+            <MudTextField FullWidth ReadOnly @bind-Value="_searchString" Placeholder="بحث" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        
+         <Columns>
+            <SelectColumn T="KshfInfoModule" />
+            <PropertyColumn Property="x => x.Name" Title="اسم الخبير" />
+            <PropertyColumn Property="x => x.KshifType" Title="نوع الكشف" />
+            <PropertyColumn Property="x => x.TotalKSofat" Title=" مجموع الكشوفات" />
+            <PropertyColumn Property="x => x.JobTitle" Title="العنوان الوظيفي" />
+            <PropertyColumn Property="x => x.SpecialBlock" Title="حالة الخبير " />
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="KshfInfoModule" />
+        </PagerContent>
+    </MudDataGrid>
+</div>
+<div id="Area2" style="display:none">
+     <MudTable Items="@Elements">
+         
+         <HeaderContent>
+             <MudTh>اسم الخبير</MudTh>
+             <MudTh>العنوان الوظيفي</MudTh>
+             <MudTh>مجموع الكشوفات</MudTh>
+             <MudTh>نوع الكشف</MudTh>
+             <MudTh>حالة الخبير</MudTh>
+         </HeaderContent>
+         <RowTemplate>
+             <MudTd DataLabel="Nr">@context.Name</MudTd>
+                <MudTd DataLabel="Sign">@context.JobTitle</MudTd>
+                <MudTd DataLabel="Name">@context.TotalKSofat</MudTd>
+                <MudTd DataLabel="Position">@context.KshifType</MudTd>
+                <MudTd DataLabel="Molar mass">@context.SpecialBlock</MudTd>
+            </RowTemplate>
+
+        </MudTable>
+
+</div>
+
+    @code{
+    public TarshehBook Tarsheh { get; set; } = new TarshehBook();
+    public KshfInfoModule KshifInfo { get; set; } = new KshfInfoModule();
+    public int SpecialestCount;
+    public List<string> Element = new List<string>();
+    public IEnumerable<KshfInfoModule> Elements = new List<KshfInfoModule>();
+    public IEnumerable<BookInfo> AllBooks = new List<BookInfo>();
+    public BookInfo BookRecord { get; set; } = new BookInfo();
+    public IEnumerable<KshfInfoModule> ChosenSpecialest = new List<KshfInfoModule>();
+    public string ChosenValue;
+    private string _searchString;
+    private bool _sortNameByLength;
+    private List<string> _events = new();
+    public int i ;
+    private int sliderValue = 0;
+    public int BookNo;
+    public DateTime? BookDate;
+    public int? HayaBookNo;
+    public DateTime? HayaBookDate;
+    public string? MokataNo;
+    public int? AddadAlkhobraa;
+    public int? WasilNo;
+    public DateTime? WasilDate;
+    public string JehaName;
+    public DateTime? KshifDate;
+    public string KshifType;
+    public DateTime? WasilDateP;
+    public DateTime? WasilDateM;
+    public int? WasilNoP;
+    public int? WasilNoM;
+    public string? PlaceNo;
+    public string? City;
+    public string ButtonStatue = "false";
+    private string Special1 { get; set; }
+    private string Special2 { get; set; }
+    private string Special3 { get; set; }
+    private string Special4 { get; set; }
+    private string Special5 { get; set; }
+    private string Special6 { get; set; }
+    private string Special7 { get; set; }
+    private string Special8 { get; set; }
+    private string Special9 { get; set; }
+    private string Special10 { get; set; }
+    private string Special11 { get; set; }
+    private string Special12 { get; set; }
+    private string Special13 { get; set; }
+    private string Special14 { get; set; }
+    private string Special15 { get; set; }
+    private string Special16 { get; set; }
+    public string UserName;
+    public DateTime? UpdateDate;
+    public DateTime? AstmaraDateM;
+    public DateTime? AstmaraDateP;
+    public int? AstmaraNoM;
+    public int? AstmaraNoP;
+
+    private void StatusValue()
+    {
+        ButtonStatue = "false";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await _kshif.GetAllSpecialest();
+        AllBooks = await _Dawa.GetAllDawas();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Check if the user is authenticated before accessing the username
+        if (user.Identity.IsAuthenticated)
+        {
+            UserName = user.Identity.Name;
+        }
+        await UpdateCurrentTime();
+        base.OnInitialized();
+    }
+    private Func<KshfInfoModule, object> _sortBy => x =>
+    {
+        return x.KshofatNo;
+
+    };
+    private Func<KshfInfoModule, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.KshifType.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{x.Name} {x.KshifType.ToString()} {x.JobTitle}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+    private async void SearchValue(ChangeEventArgs args)
+    {
+        ChosenValue = args.Value.ToString();
+        _searchString = ChosenValue;
+    }
+
+    private async void ChoseBook(ChangeEventArgs args)
+    {
+        BookNo = Convert.ToInt32(args.Value);
+        var ChickIfBookExist = await _Dawa.CheckIfBookExist(BookNo);
+        if (ChickIfBookExist is false)
+        {
+            await _JS.InvokeVoidAsync("alert", " هذا الكتاب غير موجود في النظام");
+        }
+        else
+        {
+            BookRecord = await _Dawa.GetBookInfo(BookNo);
+            BookDate = BookRecord.BookDate;
+            AstmaraDateM = BookRecord.AstmaraDateM;
+            AstmaraDateP = BookRecord.AstmaraDateP;
+            AstmaraNoM = BookRecord.AstmaraNoM;
+            AstmaraNoP = BookRecord.AstmaraNoP;
+
+            JehaName = BookRecord.JahaName;
+            HayaBookNo = BookRecord.HayaBookNo; 
+            KshifDate = BookRecord.KshefDate;
+            PlaceNo = BookRecord.PlaceNo;
+            MokataNo = BookRecord.MokataNO;
+            AddadAlkhobraa = BookRecord.AddadAlkhobraa;
+            KshifType = BookRecord.KashefType;
+            City = BookRecord.City;
+            WasilNo = BookRecord.AlwasilNo;
+            WasilDate = BookRecord.AlwasilDate;
+            KshifDate = BookRecord.KshefDate;
+            PlaceNo = BookRecord.PlaceNo;
+            UpdateDate = BookRecord.Update_Date;
+
+        }
+    }
+    private async Task SaveData()
+    {
+        var UserResponse = await _JS.InvokeAsync<bool>("confirm", "هل تود اضافة كتاب ترشيح الخبراء الى النظام؟");
+        if (UserResponse)
+        {
+
+            var CheckUserExists = await _TR.CheckIfSpecialestExistsInDB(Tarsheh);
+            var CheckxistinTarsheh = await _TR.CheckIfBookExistsInDB(BookNo);
+            if (CheckUserExists is true || CheckxistinTarsheh is false)
+            {
+                Tarsheh.BookNo = BookNo;
+                Tarsheh.BookDate = BookDate;
+                Tarsheh.HayaBookNo = HayaBookNo;
+                Tarsheh.MokataNO = MokataNo;
+                Tarsheh.AddadAlkhobraa = AddadAlkhobraa;
+                Tarsheh.JehaName = JehaName;
+                Tarsheh.KshefDate = KshifDate;
+                Tarsheh.city = City;
+                Tarsheh.WasilDateP = WasilDateP;
+                Tarsheh.WasilDateM = WasilDateM;
+                Tarsheh.AlwasilNo = WasilNo;
+                Tarsheh.WasilNoM = WasilNoM;
+                Tarsheh.AlwasilDate = WasilDate;
+                Tarsheh.WasilNoP = WasilNoM;
+                Tarsheh.KshifType = KshifType;
+                Tarsheh.PlaceNo = PlaceNo;
+                Tarsheh.WasilNoM = WasilNoM;
+                Tarsheh.WasilNoP = WasilNoP;
+                Tarsheh.WasilDateM = WasilDateM;
+                Tarsheh.WasilDateP = WasilDateP;
+
+                Tarsheh.UserName = UserName;
+                Tarsheh.Update_Date = UpdateDate;
+                i = 1;
+                foreach (var Special in Element)
+                {
+
+                    if (i == 1)
+                    {
+                        Tarsheh.SpecaialName1 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 2)
+                    {
+                        Tarsheh.SpecaialName2 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 3)
+                    {
+                        Tarsheh.SpecaialName3 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 4)
+                    {
+                        Tarsheh.SpecaialName4 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 5)
+                    {
+                        Tarsheh.SpecaialName5 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 6)
+                    {
+                        Tarsheh.SpecaialName6 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 7)
+                    {
+                        Tarsheh.SpecaialName7 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 8)
+                    {
+                        Tarsheh.SpecaialName8 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 9)
+                    {
+                        Tarsheh.SpecaialName9 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 10)
+                    {
+                        Tarsheh.SpecaialName10 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 11)
+                    {
+                        Tarsheh.SpecaialName11 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 12)
+                    {
+                        Tarsheh.SpecaialName12 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 13)
+                    {
+                        Tarsheh.SpecaialName13 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 14)
+                    {
+                        Tarsheh.SpecaialName14 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 15)
+                    {
+                        Tarsheh.SpecaialName15 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                    else if (i == 16)
+                    {
+                        Tarsheh.SpecaialName16 = Special;
+                        await _kshif.UpdateKshifNo(Special, _searchString);
+                        i++;
+                    }
+                }
+
+                var BackEndResponse = await _TR.AddNewSpecialestToTheSystem(Tarsheh);
+
+
+                await _JS.InvokeVoidAsync("alert", BackEndResponse);
+                Tarsheh = new TarshehBook();
+                BookRecord = new BookInfo();
+                await _JS.InvokeVoidAsync("alert", BackEndResponse);
+                await _JS.InvokeVoidAsync("print", "Area2");
+
+
+            }
+            else
+            {
+                await _JS.InvokeVoidAsync("alert", $"هذا الكتاب المرقم : {BookNo} موجودة في النظام مسبقاً");
+
+                
+            }
+
+        }
+
+       
+    }
+
+
+
+    private async Task SelectSpecialestsRandomley(ChangeEventArgs args)
+    {
+        sliderValue = Convert.ToInt32(args.Value);
+
+
+        SpecialestCount = Convert.ToInt32(args.Value);
+        Element = await _kshif.GetRandomSpecialest(SpecialestCount, _searchString);
+        
+        foreach(var elemnt in Element)
+        {
+            _SB.Add(elemnt, Severity.Success);
+        }
+        
+        //ChosenSpecialest = ChosenSpecialest.Append(Element);
+        //while (i <= Convert.ToInt32(args.Value))
+        //{
+        //    Element = await _kshif.GetRandomSpecialest();
+
+        //    ChosenSpecialest = ChosenSpecialest.Append(Element);
+        //    i++;
+        //}
+    }
+    private async Task UpdateCurrentTime()
+    {
+        while (true)
+        {
+            BookRecord.Update_Date = DateTime.Now;
+            StateHasChanged(); // Notify Blazor that the state has changed
+
+            await Task.Delay(1000); // Delay for 1 second
+        }
+    }
+}

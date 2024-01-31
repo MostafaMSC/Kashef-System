@@ -1,0 +1,73 @@
+﻿
+
+
+<MudPaper Elevation="0" Width="250px" Class="d-inline-flex py-3" Style="direction:rtl; background-color:transparent; color:white">
+    <MudNavMenu Color="Color.Success" Rounded="true">
+        <MudText Typo="Typo.h5" Class="px-4" Style="color:#0dcaf0"> <b> الدائرة القانونية والعقود</b> </MudText>
+        <MudDivider Class="my-2" />
+        <MudNavLink Match="NavLinkMatch.All" Href="/" Icon="@Icons.Material.Filled.AdminPanelSettings" IconColor="Color.Tertiary"><h6 style="color:black"><b>الواجهة الرئيسية</b></h6></MudNavLink>
+        <MudNavLink Href="/AllDawas" Icon="@Icons.Material.Filled.Cabin" IconColor="Color.Warning"><h6 style="color:black"><b>كتب الترشيح </b></h6></MudNavLink>
+        <MudNavLink Href="/specialest" Icon="@Icons.Material.Filled.TableChart" IconColor="Color.Primary"> <h6 style="color:black"><b> اختيار الخبراء</b></h6></MudNavLink>
+
+        <MudNavLink Href="/Jazaeam" Icon="@Icons.Material.Filled.JoinFull" IconColor="Color.Success"><h6 style="color:black"><b>ملف الدعاوى الجزائية</b></h6></MudNavLink>
+        <MudNavLink Href="/jazaea" Icon="@Icons.Material.Filled.Pages" IconColor="Color.Error"><h6 style="color:black"><b>سجل الدعاوى الجزائية</b></h6></MudNavLink>
+        <MudNavGroup Title="ادارة مستخدمي النظام" Style="font-size:16px; color:black" Icon="@Icons.Material.Filled.GroupWork" IconColor="Color.Surface">
+
+            <MudNavLink Href="/Identity/Account/Register" Icon="@Icons.Material.Filled.Security" IconColor="Color.Surface"><h6 style="color:black"><b>كلمات المرور</b></h6></MudNavLink>
+            <MudNavLink Href="/SystemUsers" Icon="@Icons.Material.Filled.AdminPanelSettings" IconColor="Color.Tertiary"><h6 style="color:black"><b>ادارة مستخدمي النظام</b></h6></MudNavLink>
+        </MudNavGroup>
+
+
+    </MudNavMenu>
+</MudPaper>
+@*
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">نظام الدعاوى القانونية</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> ملف الدعاوى
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="AllDawas">
+                <span class="oi oi-people" aria-hidden="true"></span> سجل الدعاوى
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Jazaeam">
+                <span class="oi oi-list" aria-hidden="true"></span> ملف الدعاوى الجزئية
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="jazaea">
+                <span class="oi oi-file" aria-hidden="true"></span> سجل الدعاوى الجزائية
+            </NavLink>
+        </div>
+
+    </nav>
+</div>
+
+
+*@
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
