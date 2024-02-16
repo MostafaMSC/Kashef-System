@@ -20,11 +20,8 @@
 
             <MudTextField FullWidth @bind-Value="_searchString" Placeholder="بحث" Adornment="Adornment.Start" Immediate="true"
                            Style="background-color:white" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-
              <MudButton @onclick="DeleteDawas" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error"></MudButton>
-
              <MudButton @onclick="printSelectedItem" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Print" Color="Color.Tertiary">اطبع المحدد</MudButton>
-
              <MudButton @onclick='() => _navigationManager.NavigateTo("/TarshehBookPrint")' Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Print" Color="Color.Tertiary"></MudButton>
         </ToolBarContent>
         <Columns>
@@ -37,13 +34,25 @@
              <PropertyColumn Property="x => x.PlaceNo" Title="رقم القطعة" />
              <PropertyColumn Property="x => x.city" Title="المحافظة " />
              <PropertyColumn Property="x => x.KshifType" Title="نوع الكشف " />
-             <PropertyColumn Format="dd.MM.yyyy" Property="x => x.KshefDate" Title="تاريخ الكشف " />
+            <PropertyColumn Format="dd.MM.yyyy" Property="x => x.KshefDate" Title="تاريخ الكشف " />
 
+            <TemplateColumn>
+                <CellTemplate>
+                    اضافة النتيجة
+                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Add" OnClick="(()=>AddTarshehBookResult(context.Item))" />
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Format="dd.MM.yyyy" Property="x => x.KshifResult" Title="نتيجة الكشف " />
+
+            <TemplateColumn>
+                <CellTemplate>
+                    استعراض النتيجة
+                    <iframe src="@context.Item.KshifResultPicture" style="border: none;width:100px;height:50px;align-content:center "></iframe>
+                </CellTemplate>
+            </TemplateColumn>
              <PropertyColumn Property="x => x.SpecaialName1" Title="اسم الخبير الاول"  />
-
              <PropertyColumn Property="x => x.SpecaialName2" Title="اسم الخبير الثاني" />
              <PropertyColumn Property="x => x.SpecaialName3" Title="اسم الخبير الثالث" />
-
              <PropertyColumn Property="x => x.SpecaialName4" Title="اسم الخبير الرابع" />
              <PropertyColumn Property="x => x.SpecaialName5" Title="اسم الخبير الخامس" />
              <PropertyColumn Property="x => x.SpecaialName6" Title="اسم الخبير السادس" />
@@ -56,29 +65,14 @@
              <PropertyColumn Property="x => x.SpecaialName13" Title="اسم الخبير الثالث عشر" />
              <PropertyColumn Property="x => x.SpecaialName14" Title="اسم الخبير الرابع عشر" />
              <PropertyColumn Property="x => x.SpecaialName15" Title="اسم الخبير الخامس عشر" />
-             <PropertyColumn Property="x => x.KshifResult" Title="نتائج الكشف" />
              <PropertyColumn Property="x => x.UserName" Title="اسم المستخدم" />
              <PropertyColumn Property="x => x.Update_Date" Title="تاريخ التحديث" />
-
-
-
-
-            <TemplateColumn>
-                <CellTemplate>
-                     <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Add"  OnClick="(()=>AddTarshehBookResult(context.Item))" />
-                </CellTemplate>
-            </TemplateColumn>
-
-            
             <TemplateColumn>
                 
                  <CellTemplate>
-
                      <MudIconButton  Size="@Size.Medium" Icon="@Icons.Material.Outlined.EditNote" OnClick="(()=>StartedEditingItemFunction(context.Item))">    اضافة نتيجة الكشف</MudIconButton> 
                  </CellTemplate>
              </TemplateColumn>
-
-
 
         </Columns>
         <PagerContent>
@@ -88,7 +82,7 @@
     
 </div>
 
- <div style="direction:ltr;display:block" id="Area2" class="print-table">
+ <div style="direction:ltr;display:none" id="Area2" class="print-table">
      <div style="display: flex;
             justify-content:space-around;
             align-items: center;" class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-3">
@@ -98,7 +92,7 @@
              هيأة العامة للمساحة
          </div>
          <div class="col">
-             <img style="width:100px;height:100px" src="/images/loginbg.jpg" />
+             <img style="width:200px;height:150px" src="/images/loginbg.jpg" />
 
          </div>
          <div class="col">
@@ -119,9 +113,7 @@
      <hr />
      <center><h2 style="background-color:green; color:white"> لجنة الترشيحات الالكتروني</h2></center>
      <hr />
-     <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
+     <div >
          <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
 
              <RowTemplate>
@@ -131,65 +123,48 @@
                  
              </RowTemplate>
 
-
           </MudTable>
      </div>
 
-    <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
+    <div>
      <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
 
          <RowTemplate>
-                <MudTh Style="width:200px">رقم الكتاب</MudTh>
+                <MudTh Style="width:300px">رقم الكتاب</MudTh>
 
                 <MudTd Style="width:300px" DataLabel="رقم الكتاب">@context.BookNo</MudTd>
-                    <MudTh Style="width:200px"> تاريخ الكتاب</MudTh>
+                    <MudTh Style="width:300px"> تاريخ الكتاب</MudTh>
 
                     <MudTd Style="width:300px" DataLabel="تاريخ الكتاب">@context.BookDate.Value.ToString("dd/MM/yyyy")</MudTd>
-                    
-
-
          </RowTemplate>
-
-
      </MudTable>
      </div>
 
-
-
-     <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
+     <div >
      <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
          <HeaderContent>
                
 
          </HeaderContent>
          <RowTemplate>
-                    <MudTh Style="width:200px">رقم كتاب الوارد</MudTh>
-
+                    <MudTh Style="width:300px">رقم كتاب الوارد</MudTh>
                     <MudTd Style="width:300px" DataLabel="رقم كتاب الوارد">@context.HayaBookNo</MudTd>
-
-                    <MudTh Style="width:200px"> تاريخ كتاب الوارد</MudTh>
-
+                    <MudTh Style="width:300px"> تاريخ كتاب الوارد</MudTh>
                     <MudTd Style="width:300px" DataLabel="تاريخ كتاب الوارد">@context.HayaBookDate.Value.ToString("dd-MM-yyyy")</MudTd>
 
          </RowTemplate>
 
      </MudTable>
      </div>
-        <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
+        <div >
             <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
 
                 <RowTemplate>
-                    <MudTh Style="width:200px">رقم الايراد</MudTh>
+                    <MudTh Style="width:300px">رقم الايراد</MudTh>
 
                     <MudTd Style="width:300px" >@context.WasilNoP</MudTd>
 
-                    <MudTh Style="width:200px"> التاريخ</MudTh>
+                    <MudTh Style="width:300px"> التاريخ</MudTh>
 
                     <MudTd Style="width:300px">@(context.WasilDateP.HasValue ? context.WasilDateP.Value.ToString("dd-MM-yyyy") : "")</MudTd>
 
@@ -199,44 +174,66 @@
         </div>
 
     
-    <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
+    <div>
         <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
             <HeaderContent>
 
 
             </HeaderContent>
             <RowTemplate>
-                <MudTh Style="width:200px">رقم الوصل </MudTh>
+                <MudTh Style="width:300px">رقم الوصل </MudTh>
                 <MudTd Style="width:300px" DataLabel="رقم الوصل ">@context.AlwasilNo</MudTd>
 
-                <MudTh Style="width:200px"> تاريخ الوصل </MudTh>
-                <MudTd Style="width:300px" DataLabel="تاريخ الوصل ">@context.AlwasilDate</MudTd>
+                <MudTh Style="width:300px"> تاريخ الوصل </MudTh>
+                    <MudTd Style="width:300px" DataLabel="تاريخ الوصل ">@context.AlwasilDate.Value.ToString("dd/MM/yyyy")</MudTd>
 
             </RowTemplate>
 
         </MudTable>
     </div>
+        <div>
+            <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
 
+                <RowTemplate>
+                    <MudTh Style="width:300px">تاريخ الكشف </MudTh>
+
+                    <MudTd Style="width:800Px" DataLabel="اسم الجهة"><center>@context.KshefDate.Value.ToString("dd/MM/yyyy")</center></MudTd>
+
+            </RowTemplate>
+
+
+        </MudTable>
+    </div>
      <center style="background-color:green; color:white" dir="rtl"><h3> اشارة الى الكتاب الوارد الينا اعلاه نرشح السادة المدرجة اسمائهم ادناه :</h3></center>
 
-    <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
+    <div>
+        <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
+
+            <RowTemplate>
+                <MudTh Style="width:300px">الاسم</MudTh>
+
+                <MudTd Style="width:300px">العنوان الوظيفي</MudTd>
+
+                    <MudTh Style="width:300px"> الاسم</MudTh>
+
+                <MudTd Style="width:300px">العنوان الوظيفي</MudTd>
+
+                </RowTemplate>
+
+            </MudTable>
+        </div>
+
+    <div >
          <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
 
-
-         
-             <HeaderContent>
-          
-              </HeaderContent>
-
              <RowTemplate>
-                    
-                 <MudTd Style="padding-left:80px" DataLabel="">@context.SpecaialName1</MudTd>
-                 <MudTd Style="padding-left:180px" DataLabel="">@context.SpecaialName2</MudTd>
-                 <MudTd Style="padding-left:180px" DataLabel="">@context.SpecaialName3</MudTd>
+
+                <MudTd onchange="@GetSpecialTitle1(@context.SpecaialName1)" Style="width:300px" DataLabel="">@context.SpecaialName1</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle1</MudTd>
+
+
+                    <MudTd onchange="@GetSpecialTitle2(@context.SpecaialName2)" Style="width:300px" DataLabel="">@context.SpecaialName2</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle2</MudTd>
             
              </RowTemplate>
 
@@ -244,179 +241,163 @@
          </MudTable>
      </div>
 
+        <div >
+            <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
+
+                <RowTemplate>
+
+                    <MudTd onchange="@GetSpecialTitle3(@context.SpecaialName3)" Style="width:300px" DataLabel="">@context.SpecaialName3</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle3</MudTd>
+
+
+                    <MudTd onchange="@GetSpecialTitle4(@context.SpecaialName4)" Style="width:300px" DataLabel="">@context.SpecaialName4</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle4</MudTd>
+
+                </RowTemplate>
+
+
+            </MudTable>
+        </div>
+
+        <div>
+            <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
+
+                <RowTemplate>
+
+                    <MudTd onchange="@GetSpecialTitle3(@context.SpecaialName5)" Style="width:300px" DataLabel="">@context.SpecaialName5</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle5</MudTd>
+
+
+                    <MudTd onchange="@GetSpecialTitle4(@context.SpecaialName6)" Style="width:300px" DataLabel="">@context.SpecaialName6</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle6</MudTd>
+
+                </RowTemplate>
+
+
+            </MudTable>
+        </div>
+
+        <div>
+            <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
+
+                <RowTemplate>
+
+                    <MudTd onchange="@GetSpecialTitle3(@context.SpecaialName7)" Style="width:300px" DataLabel="">@context.SpecaialName7</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle7</MudTd>
+
+
+                    <MudTd onchange="@GetSpecialTitle4(@context.SpecaialName8)" Style="width:300px" DataLabel="">@context.SpecaialName8</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle8</MudTd>
+
+                </RowTemplate>
+
+
+            </MudTable>
+        </div>
+
+        <div >
+            <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
+
+                <RowTemplate>
+
+                    <MudTd onchange="@GetSpecialTitle3(@context.SpecaialName9)" Style="width:300px" DataLabel="">@context.SpecaialName9</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle9</MudTd>
+
+
+                    <MudTd onchange="@GetSpecialTitle4(@context.SpecaialName10)" Style="width:300px" DataLabel="">@context.SpecaialName10</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle10</MudTd>
+
+                </RowTemplate>
+
+
+            </MudTable>
+        </div>
+
+        <div >
+            <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
+
+                <RowTemplate>
+
+                    <MudTd onchange="@GetSpecialTitle3(@context.SpecaialName11)" Style="width:300px" DataLabel="">@context.SpecaialName11</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle11</MudTd>
+
+
+                    <MudTd onchange="@GetSpecialTitle4(@context.SpecaialName12)" Style="width:300px" DataLabel="">@context.SpecaialName12</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle12</MudTd>
+
+                </RowTemplate>
+
+
+            </MudTable>
+        </div>
+
+
+
+        <div >
+            <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
+
+                <RowTemplate>
+
+                    <MudTd onchange="@GetSpecialTitle3(@context.SpecaialName13)" Style="width:300px" DataLabel="">@context.SpecaialName13</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle13</MudTd>
+
+
+                    <MudTd onchange="@GetSpecialTitle4(@context.SpecaialName14)" Style="width:300px" DataLabel="">@context.SpecaialName14</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle14</MudTd>
+
+                </RowTemplate>
+
+
+            </MudTable>
+        </div>
+        <div>
+            <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
+
+                <RowTemplate>
+
+                    <MudTd onchange="@GetSpecialTitle3(@context.SpecaialName15)" Style="width:300px" DataLabel="">@context.SpecaialName15</MudTd>
+                    <MudTd Style="width:300px" DataLabel="">@JobTitle15</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
         <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
-
-         <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
-
-
-
-             <HeaderContent>
-
-
-                <MudTh Style="width:400px"></MudTh>
-                <MudTh Style="width:400px"> </MudTh>
-                <MudTh Style="width:400px"></MudTh>
-             
-             </HeaderContent>
-
-             <RowTemplate>
-
-
-                 <MudTd Style="padding-left:80px" DataLabel="">@context.SpecaialName4</MudTd>
-                 <MudTd Style="padding-left:180px" DataLabel="">@context.SpecaialName5</MudTd>
-                 <MudTd Style="padding-left:180px" DataLabel=" ">@context.SpecaialName6</MudTd>
-             
-             </RowTemplate>
-
-
-         </MudTable>
-     </div>
-
-     <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
-     <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
-
-
-
-         <HeaderContent>
-
-
-            <MudTh Style="width:400px"></MudTh>
-            <MudTh Style="width:400px"></MudTh>
-            <MudTh Style="width:400px"> </MudTh>
-             
-         </HeaderContent>
-
-         <RowTemplate>
-
-
-             <MudTd Style="padding-left:80px" DataLabel="">@context.SpecaialName7</MudTd>
-             <MudTd Style="padding-left:180px" DataLabel="">@context.SpecaialName8</MudTd>
-             <MudTd Style="padding-left:180px" DataLabel=" ">@context.SpecaialName9</MudTd>
-             
-         </RowTemplate>
-
-
-     </MudTable>
-     </div>
-
-     <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
-     <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
-
-
-
-         <HeaderContent>
-
-
-            <MudTh Style="width:400px"> </MudTh>
-             
-         </HeaderContent>
-
-         <RowTemplate>
-
-
-             <MudTd Style="padding-left:350px" DataLabel="">@context.SpecaialName10</MudTd>
-                    <MudTd Style="padding-left:350px" DataLabel="">@context.SpecaialName11</MudTd>
-                    <MudTd Style="padding-left:350px" DataLabel="">@context.SpecaialName12</MudTd>
-
-         </RowTemplate>
-
-
-     </MudTable>
-     </div>
-    
-    <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
-        <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
-
-
-
-            <HeaderContent>
-
-
-                <MudTh Style="width:400px"> </MudTh>
-
-            </HeaderContent>
-
-            <RowTemplate>
-
-
-                <MudTd Style="padding-left:350px" DataLabel="">@context.SpecaialName13</MudTd>
-                <MudTd Style="padding-left:350px" DataLabel="">@context.SpecaialName14</MudTd>
-                <MudTd Style="padding-left:350px" DataLabel="">@context.SpecaialName15</MudTd>
-
-            </RowTemplate>
-
-
-        </MudTable>
-    </div>
-
-      <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
-         <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
-
-
-
-             <HeaderContent>
-
-                <MudTh Style="width:400px"> ر. اللجنة</MudTh>
-
-
-                <MudTh Style="width:400px"> عضو اللجنة</MudTh>
-
-                    <MudTh Style="width:400px;text-align:left"> الموظف المختص</MudTh>
-
-             </HeaderContent>
-
-             <RowTemplate>
-                 <MudTd Style="padding-left:150px" DataLabel="ر. اللجنة "></MudTd>
-
-
-                 <MudTd Style="padding-left:100px" DataLabel="عضو اللجنة"></MudTd>
-                 <MudTd Style="text-align:left" DataLabel="الموظف المختص"></MudTd>
-
-             
-             </RowTemplate>
-
-
-         </MudTable>
-     </div>
-
-
-     <div style="display: flex;
-            justify-content: center;
-            align-items: center;">
-         <MudTable Bordered="true" Items="@ListOfDeletedBooks" Hover="true" Breakpoint="Breakpoint.Sm">
-
-
-
-             <HeaderContent>
-
-                <MudTh Style="width:400px"> المدير العام</MudTh>
-                 <br />
-                        <MudTh Style="width:400px;text-align:left">معاون المدير العام</MudTh>
-                 <br />
-             </HeaderContent>
-
-             <RowTemplate>
-
-
-                    <MudTd Style="padding-left:50px" DataLabel="معاون المدير العام"></MudTd>
-                 <br />
-                 <MudTd Style="padding-left:460px" DataLabel=" المدير العام"></MudTd>
-                 <br />
-             </RowTemplate>
-
-
-         </MudTable>
-     </div>
+            justify-content:space-around;
+            " class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-3">
+            <div class="col">
+                الموظف المختص
+
+            </div>
+            <div class="col">
+                    عضو اللجنة
+            </div>
+            <div class="col">
+                ر.اللجنة
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <div style="display: flex;
+            justify-content:space-around;
+                " class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-3">
+            <div class="col">
+                معاون المدير العام
+
+            </div>
+            <div class="col">
+               
+            </div>
+            <div class="col">
+                المدير العام
+            </div>
+        </div>
+   
 </div>
 
  <MudScrollToTop>
@@ -424,11 +405,26 @@
  </MudScrollToTop>
 
 
- @code {
+    @code {
     private List<string> _events = new();
     private string _searchString;
     private bool _sortNameByLength;
-
+    public string JobTitle1;
+    public string JobTitle2;
+    public string JobTitle3;
+    public string JobTitle4;
+    public string JobTitle5;
+    public string JobTitle6;
+    public string JobTitle7;
+    public string JobTitle8;
+    public string JobTitle9;
+    public string JobTitle10;
+    public string JobTitle11;
+    public string JobTitle12;
+    public string JobTitle13;
+    public string JobTitle14;
+    public string JobTitle15;
+    
     private IEnumerable<TarshehBook> Elements = new List<TarshehBook>();
     private List<TarshehBook> SpecificRecords { get; set; } = new List<TarshehBook>();
     public List<TarshehBook> ListOfDeletedBooks { get; set; } = new List<TarshehBook>();
@@ -477,6 +473,7 @@
 
         await _Dialog.ShowAsync<AddResult>("أضافة نتيجة الكشف", Parameters, ModalOptions);
     }
+
     private Func<TarshehBook, object> _sortBy => x =>
     {
         if (_sortNameByLength)
@@ -495,7 +492,7 @@
             return true;
         if ($"{x.UserName}".Contains(_searchString))
             return true;
-            if (x.JehaName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        if (x.JehaName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
 
@@ -559,6 +556,96 @@
         ModalOptions.Position = DialogPosition.Center;
 
         await _Dialog.ShowAsync<EditTarshehBooks>("تحديث الكتاب", Parameters, ModalOptions);
+    }
+    private async Task GetSpecialTitle1(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle1 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle2(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle2 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle3(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle3 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle4(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle4 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle5(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle5 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle6(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle6 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle7(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle7 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle8(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle8 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle9(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle9 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle10(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle10 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle11(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle11 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle12(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle12 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle13(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle13 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle14(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle14 = JobTitle.ToString();
+
+    }
+    private async Task GetSpecialTitle15(string SpecialName)
+    {
+        var JobTitle = await _Tarsheh.GetSpecialJobTitle(SpecialName);
+        JobTitle15 = JobTitle.ToString();
+
     }
 
 }

@@ -32,7 +32,8 @@ builder.Services.AddRazorPages();
 //builder.Services.AddRazorPages(Options => { Options.Conventions.AddPageRoute("/Identity/Account/Login", ""); });
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationState<IdentityUser>>();
-   
+builder.Services.AddHttpClient();
+
 
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddMudServices();

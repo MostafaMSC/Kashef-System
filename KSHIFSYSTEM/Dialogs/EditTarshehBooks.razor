@@ -10,12 +10,36 @@
 
 <div  style=" direction:rtl; border:solid;padding:20px; margin:20px;background-color:white;border-color:lightblue;border-radius:20px;">
     <EditForm Model="TarshehViewModel" OnValidSubmit="EditData">
-        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-col-2 " >
-            <div class="col">
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-col-2" style="margin-bottom:20px" >
+            @* <div class="col">
                 <MudItem>
                     <MudTextField Style="background-color:white" Label="رقم الكتاب الوارد" T="int" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.BookNo" />
                 </MudItem>
+            </div> *@
+            <div class="col">
+                <MudItem>
+                    <MudTextField Style="background-color:white" Label="رقم كتاب الوارد" T="int?" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.HayaBookNo" />
+                </MudItem>
             </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Style="background-color:white" Label="تاريخ كتاب الوارد" T="DateTime?" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.HayaBookDate" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Style="background-color:white" Label="رقم القطعة" T="string" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.PlaceNo" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Style="background-color:white" Label="رقم المقاطعة" T="string" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.MokataNO" />
+                </MudItem>
+            </div>
+
+        </div>
+        <br />
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-col-2">
             <div class="col">
                 <MudSelect @bind-Value="@TarshehViewModel.city" Label="اخترالمحافظة " Variant="Variant.Outlined">
                     <MudSelectItem Value="@("  بغداد")"> بغداد </MudSelectItem>
@@ -38,34 +62,41 @@
                     <MudSelectItem Value="@(" الكوت")"> الكوت</MudSelectItem>
 
                 </MudSelect>
-                
+
             </div>
             <div class="col">
                 <MudItem>
                     <MudSelect Style="background-color:white" Label="نوع الكشف" T="string" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.KshifType">
                         <MudSelectItem Value="@("")"> أختر نوع الكشف</MudSelectItem>
-                            <MudSelectItem Value="@("محاكم")">محاكم</MudSelectItem>
-                            <MudSelectItem Value="@("عقارات دولة")">عقارات دولة </MudSelectItem>
+                        <MudSelectItem Value="@("محاكم")">محاكم</MudSelectItem>
+                        <MudSelectItem Value="@("عقارات دولة")">عقارات دولة </MudSelectItem>
                     </MudSelect>
                 </MudItem>
             </div>
-            
+
             <div class="col">
                 <MudItem>
                     <MudTextField Style="background-color:white" Label="اسم جهة الاصدار والمقاطعة" T="string" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.JehaName" />
                 </MudItem>
             </div>
-        </div>
-
-        <br />
-        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1">
-
-            
             <div class="col">
                 <MudItem>
                     <MudTextField Style="background-color:white" Label="تاريخ الكشف" T="DateTime?" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.KshefDate" />
                 </MudItem>
             </div>
+
+
+
+
+        </div>
+
+
+
+        <br />
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1">
+
+            
+            
             <div class="col">
                 <MudItem>
                     <MudTextField Style="background-color:white" Label="رقم الوصل" T="int?" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.WasilNoP" />

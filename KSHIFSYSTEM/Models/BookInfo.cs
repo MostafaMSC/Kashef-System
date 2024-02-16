@@ -37,7 +37,6 @@ namespace KSHIFSYSTEM.Models
         public int? AlwasilNo { get; set; }
         [Required]
         public DateTime? AlwasilDate { get; set; }
-        
         public string? BookPic { get; set; }
         public DateTime? Update_Date { get; set; } = DateTime.Now;
         public string? UserName { get; set; }

@@ -6,12 +6,12 @@
 @inject IKshifInfo _SP
 @inject NavigationManager _Nav
 @inject IDialogService _Dialog
-@attribute [Authorize(Roles = "admin,eatalaJazaea,DawaView")]
+@* //,eatalaJazaea,DawaView
+ *@
+
+ @attribute [Authorize(Roles = "admin")]
 <PageTitle> كل الخبراء  </PageTitle>
-
-
-
-
+<script src="/javascript/changcolorfunction.js"></script>
 <div id="Area1" class="table-responsive">
     <center><MudText Style="color:aqua" Typo="Typo.h4">جدول الخبراء</MudText></center>
     <br />
@@ -26,10 +26,18 @@
 
             <AuthorizeView Roles = "admin">
                 <Authorized>
-                     <MudButton @onclick="DeleteDawas" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error"></MudButton>
+                     <MudTooltip Color="Color.Tertiary" Placement="Placement.Bottom" Arrow="true" Text="حذف الخبير">
+                         <MudButton @onclick="DeleteDawas" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error"></MudButton>
+                      </MudTooltip>
+                     <MudTooltip Color="Color.Tertiary" Placement="Placement.Bottom" Arrow="true" Text="ايقاف مؤقت للخبير">
+
                      <MudButton @onclick="BlockSpecial" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Block" Color="Color.Error"></MudButton>
+                    </MudTooltip>
+                     <MudTooltip Color="Color.Tertiary" Placement="Placement.Bottom" Arrow="true" Text="اتاحة الخبير للعمل">
+
                      <MudButton @onclick="UnBlockSpecial" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Block" Color="Color.Success"></MudButton>
-                </Authorized>
+                     </MudTooltip>
+                 </Authorized>
             </AuthorizeView>
          </ToolBarContent>
          <Columns>
@@ -51,27 +59,19 @@
          </PagerContent>
      </MudDataGrid>
  </div>
+
+@*  <button id="specialstate" @onclick="@changeColor" class="form-control">متاح للعمل</button>
+ *@
  <MudScrollToTop>
      <MudFab Color="Color.Tertiary" Icon="@Icons.Material.Filled.ArrowCircleUp" />
  </MudScrollToTop>
-@* 
- <script>
-     var field = document.querySelector("#state");
-     if (field.innerHTML.trim() === "متاح للعمل") {
-         field.style.color = "green";
-
-     } else {
-         field.style.color = "red";
-     }
-
- </script> *@
  @code {
 
     [CascadingParameter]
     public IEnumerable<KshfInfoModule> ListOfBlockedSpecilest { get; set; } = new List<KshfInfoModule>();
     [Parameter]
     public string Name { get; set; }
-    
+
     private List<string> _events = new();
     private IEnumerable<KshfInfoModule> Elements = new List<KshfInfoModule>();
     private List<KshfInfoModule> SpecificRecords { get; set; } = new List<KshfInfoModule>();
@@ -82,6 +82,7 @@
     protected override async Task OnInitializedAsync()
     {
         Elements = await _Spec.GetAllSpecialest();
+
     }
     void RowClicked(DataGridRowClickEventArgs<KshfInfoModule> args)
     {
@@ -165,5 +166,10 @@
     {
         _Nav.NavigateTo($"/SpecialReport/{name}");
     }
-    
+    private void changeColor()
+    {
+       _js.InvokeVoidAsync("changcolorfunction", "specialstate");
+        
+    }
 }
+

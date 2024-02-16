@@ -1,4 +1,4 @@
-﻿using KSHIFSYSTEM.Models;
+﻿    using KSHIFSYSTEM.Models;
 using KSHIFSYSTEM.ViewModels;
 
 namespace KSHIFSYSTEM.BackEnd.Interfaces
@@ -36,5 +36,7 @@ namespace KSHIFSYSTEM.BackEnd.Interfaces
 
         public Task<bool> CheckIfTheBookResultsAddedPIC(int BookNO);
         public Task<List<TarshehBook>> GetSpecialInfoByName(string Name);
+        public Task<string> GetSpecialJobTitle(string Name);
+        public int TotalUncompleteBooks(IEnumerable<TarshehBook> ListOfTarshehBooks);
     }
 }

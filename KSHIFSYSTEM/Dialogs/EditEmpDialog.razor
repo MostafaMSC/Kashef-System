@@ -177,7 +177,7 @@
         <div>
             <label style="font-size:20px;margin:20px">صورة الكتاب</label>
             <MudItem>
-                <InputFile Required="true" accept=".pdf" class="form-control" style="background-color:transparent" OnChange="CheckFile" />
+                <InputFile accept=".pdf" class="form-control" style="background-color:transparent" OnChange="CheckFile" />
             </MudItem>
         </div>
         <br />
@@ -188,7 +188,10 @@
         </div>
 
         <br />
-        <MudButton ButtonType="ButtonType.Submit" @onclick='() => _navigationManager.NavigateTo("../viewBooks")' FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Success" Size="Size.Large">حفظ الدعوى </MudButton>
+        <center >
+            <MudButton Style="margin-left:30px" ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Success" Size="Size.Large">حفظ </MudButton>
+         <MudButton  Variant="Variant.Filled" @onclick='() => _navigationManager.NavigateTo("../viewBooks")' StartIcon="@Icons.Material.Filled.Cancel" IconColor="Color.Error" Size="Size.Large">الغاء </MudButton>
+        </center>
     </EditForm>
 </div>
 

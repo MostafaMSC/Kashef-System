@@ -12,24 +12,24 @@
 </center>
 
 <div id="Area2" style="margin:20px">
-    <center><h2 style="color:black;margin:20px"><b>@Name</b></h2></center>
+    <center><h2 style="color:black;margin:20px">اسم الخبير :<b> @Name</b></h2></center>
     <MudTable T="TarshehBook" Items="@AllTarsheh" Hover="true" Breakpoint="Breakpoint.Md">
         <HeaderContent>
-            <MudTh>رقم الكتاب</MudTh>
-            <MudTh>الجهة</MudTh>
-            <MudTh>تاريخ الكشف</MudTh>
-            <MudTh>نوع الكشف</MudTh>
-            <MudTh>نتيجة الكشف </MudTh>
-            <MudTh> المحافظة </MudTh>
+            <MudTh Style="width:300px">رقم الكتاب</MudTh>
+            <MudTh Style="width:300px">الجهة</MudTh>
+            <MudTh Style="width:300px">تاريخ الكشف</MudTh>
+            <MudTh Style="width:300px">نوع الكشف</MudTh>
+            <MudTh Style="width:300px">نتيجة الكشف </MudTh>
+            <MudTh Style="width:300px"> المحافظة </MudTh>
 
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nr">@context.BookNo</MudTd>
-                <MudTd DataLabel="Sign">@context.JehaName</MudTd>
-                <MudTd DataLabel="Name">@context.KshefDate.Value.ToString("dd-MM-yyyy")</MudTd>
-                <MudTd DataLabel="Position">@context.KshifType</MudTd>
-                <MudTd DataLabel="Molar mass">@context.KshifResult</MudTd>
-                <MudTd DataLabel="Molar mass">@context.city</MudTd>
+                <MudTd Style="width:300px" DataLabel="Sign">@context.JehaName</MudTd>
+                <MudTd Style="width:300px" DataLabel="Name">@context.KshefDate.Value.ToString("dd-MM-yyyy")</MudTd>
+                <MudTd Style="width:300px" DataLabel="Position">@context.KshifType</MudTd>
+                <MudTd Style="width:300px" DataLabel="Molar mass">@context.KshifResult</MudTd>
+                <MudTd Style="width:300px" DataLabel="Molar mass">@context.city</MudTd>
             </RowTemplate>
         </MudTable>
         

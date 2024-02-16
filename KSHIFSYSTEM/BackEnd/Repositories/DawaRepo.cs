@@ -153,6 +153,8 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
             EmpViewModel.BookPic = Model.BookPic;
             EmpViewModel.BookDate = Model.BookDate;
             EmpViewModel.JahaName = Model.JahaName;
+            EmpViewModel.PlaceNo = Model.PlaceNo;
+            EmpViewModel.MokataNO = Model.MokataNO;
 
             EmpViewModel.AstmaraDateM = Model.AstmaraDateM;
             EmpViewModel.AstmaraDateP = Model.AstmaraDateP;
@@ -183,7 +185,8 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
                 Model.AstmaraDateM = EditedEmp.AstmaraDateM;
                 Model.AstmaraDateP = EditedEmp.AstmaraDateP;
                 Model.JahaName = EditedEmp.JahaName;
-
+                Model.PlaceNo = EditedEmp.PlaceNo;
+                Model.MokataNO = EditedEmp.MokataNO;
                 Model.AstmaraNoP = EditedEmp.AstmaraNoP;
                 Model.AstmaraNoM = EditedEmp.AstmaraNoM;
                 Model.City = EditedEmp.City;

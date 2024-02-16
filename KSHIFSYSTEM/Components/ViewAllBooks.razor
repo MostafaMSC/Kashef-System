@@ -16,7 +16,7 @@
     <MudDataGrid Striped="true" Elevation="18"
                  Style="background-color:whitesmoke; border:solid;padding:20px;border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px"
                  T="BookInfo" MultiSelection="true" Items="@Elements" SortMode="SortMode.Multiple" Filterable="false"
-                 Hover="true" Hideable="true" QuickFilter="@_quickFilter" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged">
+                 RowStyleFunc="@_rowStyleFunc" Hover="true" Hideable="true" QuickFilter="@_quickFilter" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged">
         <ToolBarContent>
             <MudSpacer />
             <MudTextField FullWidth @bind-Value="_searchString" Placeholder="بحث" Adornment="Adornment.Start" Immediate="true"
@@ -25,8 +25,9 @@
                        <MudButton @onclick="DeleteDawas" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error"></MudButton>
              <MudButton @onclick='() => _Nav.NavigateTo("/WaredBookPrint")' Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Print" Color="Color.Tertiary"></MudButton>
              <MudButton @onclick="printSelectedItem" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Print" Color="Color.Tertiary">اطبع المحدد فقط</MudButton>
-
+             
          </ToolBarContent>
+        
         <Columns>
             <SelectColumn T="BookInfo" />
 
@@ -233,8 +234,15 @@
     private async void printSelectedItem()
     {
         SpecificRecords = await _Dawa.GetSpecificBooks(ListOfDeletedBooks.Select(a => a.Id).ToList());
-        
-
         await _js.InvokeVoidAsync("print", "Area2");
     }
+    private Func<BookInfo, int, string> _rowStyleFunc => (x, i) =>
+    {
+        var result = Task.Run(() => _Tarsheh.CheckIfBookExistsInDB(x.BookNo)).Result;
+
+        if (result == false)
+            return "background-color:#B0BEC5";
+
+        return "";
+    };
 }

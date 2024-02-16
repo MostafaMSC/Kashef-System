@@ -1,0 +1,46 @@
+﻿@page "/email"
+@inject HttpClient _client
+@using KSHIFSYSTEM.Models
+<h3>Email Form</h3>
+<EditForm OnValidSubmit="SendEmailAsync" Model="EMAIL">
+    <label for="toEmail">To Email:</label>
+    <input id="toEmail" @bind-value="@toEmail" />
+
+    <label for="subject">Subject:</label>
+    <input id="subject" @bind-value="@subject" />
+
+    <label for="body">Body:</label>
+    <textarea id="body" @bind="@body"></textarea>
+
+    <MudButton ButtonType="ButtonType.Submit" FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Tertiary" Size="Size.Large"><b style="color:#00695C">حفظ الكتاب</b></MudButton>
+</EditForm>
+
+@code {
+    private string toEmail;
+    private string subject;
+    private string body;
+    public sendEmailModule EMAIL { get; set; } = new sendEmailModule();
+
+    
+    private async Task SendEmailAsync()
+    {
+        var request = new
+        {
+            ToEmail = toEmail,
+            Subject = subject,
+            Body = body
+        };
+
+        // Use the correct URL of your backend API endpoint
+        var response = await _client.PostAsJsonAsync("https://localhost:7278/email", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Email sent successfully");
+        }
+        else
+        {
+            Console.WriteLine($"Error: {response.StatusCode}, {await response.Content.ReadAsStringAsync()}");
+        }
+    }
+}

@@ -26,10 +26,10 @@ function print(Area2) {
     var printWindow = window.open('', '', 'width=1300,height=1100');
     printWindow.document.open();
     printWindow.document.write('<style>');
-    printWindow.document.write('.print-table { border-collapse: collapse; width: 100%; }');
-    printWindow.document.write('.print-table th, .print-table td { border: 1px solid black; padding: 8px; text-align: right; }');
+    printWindow.document.write('.print-table { border-collapse: collapse; width: 100%;font-size:20px }');
+    printWindow.document.write('.print-table th, .print-table td { border: 1px solid black; padding: 8px; text-align: right; font-size:20px }');
     printWindow.document.write('</style>');
-    printWindow.document.write('<style> body { direction: rtl; }</style>');
+    printWindow.document.write('<style> body { direction: rtl; font-size:20px}</style>');
     printWindow.document.write('<div class="print-table">' + content + '</div>');
     printWindow.document.write('</body>  </html>');
     printWindow.document.close();

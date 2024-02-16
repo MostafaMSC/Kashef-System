@@ -48,23 +48,23 @@
 @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
  *@            </MudTimelineItem>
         }
-        @if (Stage3 == false)
+        @if (Stage3 == true || Stage4 ==true)
         {
-            <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default" TimelineAlign="TimelineAlign.End">
+            <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success" TimelineAlign="TimelineAlign.End">
                 <MudText Typo="Typo.body2">خرج الى الكشف ولم يسلم التقرير</MudText>
 @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
  *@            </MudTimelineItem>
         }
         else
         {
-            <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success" TimelineAlign="TimelineAlign.End">
+            <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default" TimelineAlign="TimelineAlign.End">
                 <MudText Typo="Typo.body2"> خرج الى الكشف ولم يسلم التقرير</MudText>
 @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
  *@            </MudTimelineItem>
         }
-        @if (Stage4 == false)
+        @if (Stage4 == true)
         {
-            <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default" TimelineAlign="TimelineAlign.End">
+            <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success" TimelineAlign="TimelineAlign.End">
                 <MudText Typo="Typo.body2">تم اجراء الكشف وتسليم التقرير</MudText>
                 @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
             *@
@@ -72,7 +72,7 @@
         }
         else
         {
-            <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success" TimelineAlign="TimelineAlign.End">
+            <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default" TimelineAlign="TimelineAlign.End">
                 <MudText Typo="Typo.body2"> تم اجراء الكشف وتسليم التقرير</MudText>
                 @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
             *@

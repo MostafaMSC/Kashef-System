@@ -31,15 +31,11 @@
                 <input class="form-control" type="text" placeholder="ادخل رقم الكتاب" @onchange="ChoseBook" />
             </div>
             <br />
-
-
-            
             <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1">
                 <div class="col" style="align-content:end">
 
                     <MudItem>   
-
-                        <Select @onclick="StatusValue" class="form-control" T="string" @onchange="@((ChangeEventArgs args)=>SearchValue(args ))" Label="اختر نوع الخبراء من فضلك" Variant="Variant.Outlined">
+                        <Select required="true" @onclick="StatusValue" class="form-control" T="string" @onchange="@((ChangeEventArgs args)=>{SearchValue(args ); ChangeStateOfSlider(); })" Label="اختر نوع الخبراء من فضلك" Variant="Variant.Outlined">
                             <option Value="@("")"> أختر نوع الكشف </option>
                             <option Value="@("محاكم")">محاكم</option>
                             <option Value="@("عقارات دولة")">عقارات دولة  </option>
@@ -48,11 +44,10 @@
                 </div>
                 <div class="row row-cols-lg-1 row-cols-md-1 row-cols-sm-1 row-cols-1">
                     <div class="col" style="align-content:end">
-                        <MudSlider Value:Immediate="@sliderValue" @onchange="@((ChangeEventArgs args)=>SelectSpecialestsRandomley(args))" Min="0" Max="16" Size="Size.Medium" Color="Color.Success" Style="color:white;">عدد الخبراء: @sliderValue.ToString()</MudSlider>
+                        <MudSlider Disabled="SliderState" Value:Immediate="@sliderValue" @onchange="@((ChangeEventArgs args)=>SelectSpecialestsRandomley(args))" Min="0" Max="16" Size="Size.Medium" Color="Color.Success" Style="color:white;">عدد الخبراء: @sliderValue.ToString()</MudSlider>
                     </div>
                 </div>
                 <br />
-
             </div>
  
             <div >
@@ -216,25 +211,28 @@
     </MudDataGrid>
 </div>
 <div id="Area2" style="display:none">
+    <h1>  قائمة الخبراء الكلية </h1>
      <MudTable Items="@Elements">
-         
+        
          <HeaderContent>
-             <MudTh>اسم الخبير</MudTh>
-             <MudTh>العنوان الوظيفي</MudTh>
-             <MudTh>مجموع الكشوفات</MudTh>
-             <MudTh>نوع الكشف</MudTh>
-             <MudTh>حالة الخبير</MudTh>
+             <MudTh Style="width:300px">اسم الخبير</MudTh>
+             <MudTh Style="width:300px">العنوان الوظيفي</MudTh>
+             <MudTh Style="width:300px">مجموع الكشوفات</MudTh>
+             <MudTh Style="width:300px">نوع الكشف</MudTh>
+             <MudTh Style="width:300px">حالة الخبير</MudTh>
          </HeaderContent>
          <RowTemplate>
-             <MudTd DataLabel="Nr">@context.Name</MudTd>
-                <MudTd DataLabel="Sign">@context.JobTitle</MudTd>
-                <MudTd DataLabel="Name">@context.TotalKSofat</MudTd>
-                <MudTd DataLabel="Position">@context.KshifType</MudTd>
-                <MudTd DataLabel="Molar mass">@context.SpecialBlock</MudTd>
+             <MudTd Style="width:300px" DataLabel="Nr">@context.Name</MudTd>
+                <MudTd Style="width:300px" DataLabel="Sign">@context.JobTitle</MudTd>
+                <MudTd Style="width:300px" DataLabel="Name">@context.TotalKSofat</MudTd>
+                <MudTd Style="width:300px" DataLabel="Position">@context.KshifType</MudTd>
+                <MudTd Style="width:300px" DataLabel="Molar mass">@context.SpecialBlock</MudTd>
             </RowTemplate>
 
-        </MudTable>
-
+     </MudTable>
+    <div>
+            <center> <h3 style="margin:30px">@Tarsheh.Update_Date</h3></center>
+    </div>
 </div>
 
     @code{
@@ -292,7 +290,7 @@
     public DateTime? AstmaraDateP;
     public int? AstmaraNoM;
     public int? AstmaraNoP;
-
+    bool SliderState = true;
     private void StatusValue()
     {
         ButtonStatue = "false";
@@ -388,12 +386,12 @@
                 Tarsheh.JehaName = JehaName;
                 Tarsheh.KshefDate = KshifDate;
                 Tarsheh.city = City;
-                Tarsheh.WasilDateP = WasilDateP;
-                Tarsheh.WasilDateM = WasilDateM;
+                Tarsheh.WasilDateP = AstmaraDateP;
+                Tarsheh.WasilDateM = AstmaraDateM;
                 Tarsheh.AlwasilNo = WasilNo;
-                Tarsheh.WasilNoM = WasilNoM;
+                Tarsheh.WasilNoM = AstmaraNoM;
                 Tarsheh.AlwasilDate = WasilDate;
-                Tarsheh.WasilNoP = WasilNoM;
+                Tarsheh.WasilNoP = AstmaraNoP;
                 Tarsheh.KshifType = KshifType;
                 Tarsheh.PlaceNo = PlaceNo;
                 Tarsheh.WasilNoM = WasilNoM;
@@ -402,7 +400,6 @@
                 Tarsheh.WasilDateP = WasilDateP;
 
                 Tarsheh.UserName = UserName;
-                Tarsheh.Update_Date = UpdateDate;
                 i = 1;
                 foreach (var Special in Element)
                 {
@@ -520,12 +517,12 @@
             {
                 await _JS.InvokeVoidAsync("alert", $"هذا الكتاب المرقم : {BookNo} موجودة في النظام مسبقاً");
 
-                
+
             }
 
         }
 
-       
+
     }
 
 
@@ -537,12 +534,12 @@
 
         SpecialestCount = Convert.ToInt32(args.Value);
         Element = await _kshif.GetRandomSpecialest(SpecialestCount, _searchString);
-        
+
         foreach(var elemnt in Element)
         {
             _SB.Add(elemnt, Severity.Success);
         }
-        
+
         //ChosenSpecialest = ChosenSpecialest.Append(Element);
         //while (i <= Convert.ToInt32(args.Value))
         //{
@@ -550,7 +547,7 @@
 
         //    ChosenSpecialest = ChosenSpecialest.Append(Element);
         //    i++;
-        //}
+    //}
     }
     private async Task UpdateCurrentTime()
     {
@@ -561,5 +558,9 @@
 
             await Task.Delay(1000); // Delay for 1 second
         }
+    }
+    public async Task ChangeStateOfSlider()
+    {
+        SliderState = false;
     }
 }

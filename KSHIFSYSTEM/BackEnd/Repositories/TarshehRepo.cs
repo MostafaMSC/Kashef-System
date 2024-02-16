@@ -55,7 +55,6 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
 
         public async Task<bool> GetOneBook(int BOOKNO)
         {
-
             var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a=>a.BookNo == BOOKNO);
             if (Record is null)
             { return false; }
@@ -69,10 +68,8 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
 
 
                 }
-            }
-            
+            }   
         }
-
 
         public async Task<List<TarshehBook>> GetSpecificBooks(List<int> SpecificRecords)
         {
@@ -390,18 +387,21 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
 
         public async Task<bool> CheckIfTheBookResultsAddedPIC(int BookNO)
         {
-            var BookRecord = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.BookNo == BookNO);
-            if (BookRecord == null)
-            {
-                return false;
-            }else if(BookRecord.KshifResultPicture is null )
-            {
-                
-                return false;
-            }
+            var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.BookNo == BookNO);
+            if (Record is null)
+            { return false; }
             else
             {
-                return true;
+                if (Record.KshifResultPicture is "")
+                { 
+                    return false; 
+                }
+                else
+                {
+                    return true;
+
+
+                }
             }
         }
 
@@ -414,6 +414,39 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
             || a.SpecaialName12 == Name || a.SpecaialName13 == Name || a.SpecaialName14 == Name || a.SpecaialName15 == Name).ToListAsync();
             return ListOfTarshehBooks;
 
+        }
+
+        public async Task<string> GetSpecialJobTitle(string Name)
+        {
+            var SpecialRecord = await _db.SpecialestTable.FirstOrDefaultAsync(a=>a.Name == Name);
+            if (SpecialRecord != null)
+            {
+                {
+                    var Job = SpecialRecord.JobTitle;
+                    return Job;
+                }
+            }
+            else
+            {
+                return "";
+            }
+               
+
+           
+        }
+
+        public int TotalUncompleteBooks(IEnumerable<TarshehBook> ListOfTarshehBooks)
+        {
+            int total = 0;
+            foreach(var book in ListOfTarshehBooks)
+            {
+                if (book.KshifResultPicture == null)
+                {
+                    total++;
+                }
+                
+            }
+            return total;
         }
     }
 }

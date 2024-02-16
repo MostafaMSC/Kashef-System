@@ -83,11 +83,9 @@
                             <MudFab Href="/timeline" Label="تتبع الكتب" Style="border:solid; border-color:cadetblue ; background-color:floralwhite;font-size:large; color:#00695C" StartIcon="@Icons.Material.Filled.DirectionsWalk" />
                 </b>
             </center>
-
             <br />
             <br />
             <br />
-
                     <MudList Style="height:300px;width:200px;overflow:auto;background-color:floralwhite;border-radius:20px;margin-right:10px">
                         <center><b style="font-size:medium">     الخبراء الموقفين حاليا     </b></center>
 
@@ -99,33 +97,17 @@
                         }
                                                 
                     </MudList>
-            @* <center>
-            <h6 style="color:#01579B"><b>Ministery Of Water Resources   </b></h6>
-            <br />
-            <MudRating SelectedValue="2" Size="Size.Medium" />
-            <br />
-            <br />
-            <b style="color:#01579B">Information Technology</b>
-            <br />
-            </center> *@
         </div>
                 </Authorized>
         <NotAuthorized>
-
         </NotAuthorized>
     </AuthorizeView>
-
-
         <MudMainContent Style="direction:rtl; width:600px">
             <br />
             @Body
             <br />
-            <footer><center><b style="font-size:20px;color:white">Programmers: Mustafa Najem - Rana Talib</b></center></footer>
+            <footer style="margin-top:-20px"><center><b style="font-size:20px;color:white">Programmers: Mustafa Najem - Rana Talib</b></center></footer>
         </MudMainContent>
-@*         <AuthorizeView>
-            <Authorized> *@
-
-            
 
         <div style="max-width:100%;
         padding: 1rem;
@@ -145,19 +127,12 @@
                 <h4 style=" color:#00695C;text-shadow: 1px 1px white; text- align:end; font-size: 2vw" class="display-4">
                     <b>نظام الترشيح الالكتروني</b>
                 </h4>
-
-
-
                 <MudSpacer />
                 <LoginDisplay></LoginDisplay>
 
             </MudAppBar>
         </div>
-@*             </Authorized>
-            <NotAuthorized>
 
-            </NotAuthorized>
-        </AuthorizeView> *@
     </div>
 
 </MudLayout>
@@ -169,6 +144,7 @@
     DrawerClipMode clipMode = DrawerClipMode.Always;
     [CascadingParameter]
     public IEnumerable<KshfInfoModule> ListOfBlockedSpecilest { get; set; } = new List<KshfInfoModule>();
+
     void OpenDrawer(Anchor anchor)
     {
         open = !open;
@@ -182,86 +158,5 @@
         await Task.Delay(2000);
         ListOfBlockedSpecilest = await _SP.GetAllBlockedSpecialest();
     }
+
 }
-
-@*@using MinistryOfWarerResources.Components
-@using MinistryOfWarerResources.Pages
-*@
-@*@inherits LayoutComponentBase
-<MudThemeProvider @bind-IsDarkMode="@ChangeTheme" />
-<MudDialogProvider />
-<MudSnackbarProvider />*@
-
-@*@inject ISnackbar Snackbar
-
-
-@code {
-    private void OnClick(MouseEventArgs args) => Snackbar.Add("OnClick Invoked");
-    private void OnTouch(TouchEventArgs args) => Snackbar.Add("OnTouch Invoked");
-}
-@code {
-    public bool ChangeTheme { get; set; }
-}
-<MudToggleIconButton @bind-Toggled="@ChangeTheme"
-                     Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Error" Title="Off"
-                     ToggledIcon="@Icons.Material.Filled.LightMode" ToggledColor="@Color.Success" ToggledTitle="On" />
-<MudTabs Style="margin:40px;" Elevation="4" Rounded="true" Color="@Color.Primary" PrevIcon="@Icons.Material.Filled.SkipPrevious" NextIcon="@Icons.Material.Filled.SkipNext" PanelClass="pa-6">
-@*
-*@   @* <MudTabPanel >
-        <ChildContent>
-            <MudText><Index /></MudText>
-        </ChildContent>
-        <TabContent >
-            <b style="font-size:15px">اضافة ملف الدعاوى </b>
-        </TabContent>
-    </MudTabPanel>
-    <MudTabPanel>
-        <ChildContent>*@
-           @* <MudText><DawaJAZAEA/></MudText>
-        </ChildContent>
-        <TabContent>
-            <b style="font-size:15px">اضافة ملف الدعاوى الجزائية </b>
-        </TabContent>
-    </MudTabPanel>
-    <MudTabPanel>
-        <ChildContent>*@
-           @* <MudText><AllStaff /></MudText>
-        </ChildContent>
-        <TabContent>
-            <b style="font-size:15px">سجل الدعاوى</b>
-        </TabContent>
-    </MudTabPanel>
-    <MudTabPanel>
-        <ChildContent>
-            <MudText><JazaeaALL></JazaeaALL></MudText>
-        </ChildContent>
-        <TabContent>
-            <b style="font-size:15px">سجل الدعاوى الجزائية </b>
-        </TabContent>
-    </MudTabPanel>
-*@
-@*<MudTabPanel>
-    <ChildContent>
-        <MudText><AddOffice/></MudText>
-    </ChildContent>
-    <TabWrapperContent>
-        <MudTooltip Text="ToolTip Two">
-            @context
-        </MudTooltip>
-    </TabWrapperContent>
-    <TabContent>*@
-          @*  <MudText Typo="Typo.h6"><b style="font-size:15px"> ترميز  التشكيلات</b></MudText>
-    </TabContent>
-</MudTabPanel>
-<MudTabPanel>
-    <ChildContent>
-        <MudText></MudText>
-    </ChildContent>
-
-    <TabWrapperContent>
-        <MudTooltip Text="ToolTip Three">
-            @context
-        </MudTooltip>
-    </TabWrapperContent>
-</MudTabPanel>
-</MudTabs>*@

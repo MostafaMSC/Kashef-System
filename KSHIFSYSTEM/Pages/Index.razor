@@ -237,7 +237,7 @@
         // Update the time every second
         await UpdateCurrentTime();
         base.OnInitialized();
-        
+
 
     }
     public InputFileChangeEventArgs UplaodedBookImage { get; set; }
@@ -270,9 +270,9 @@
         if (UploadedFile.File.ContentType == "application/pdf")
         {
 
-                await _js.InvokeVoidAsync("alert", "تم ارفاق الملف بنجاح");
-                UplaodedBookImage = UploadedFile;
-        
+            await _js.InvokeVoidAsync("alert", "تم ارفاق الملف بنجاح");
+            UplaodedBookImage = UploadedFile;
+
         }
         else
         {
@@ -281,30 +281,6 @@
         }
     }
 
-    //private async Task CheckFile(InputFileChangeEventArgs UploadedFile)
-    //{
-
-    //    //.png,.jpg,.jpeg,.pdf
-    //    if (UploadedFile.File.ContentType == "image/png" || UploadedFile.File.ContentType == "image/jpeg"
-    //    || UploadedFile.File.ContentType == "image/pdf")
-    //    {
-    //        if (UploadedFile.File.Size > 2000000)
-    //        {
-    //            await _js.InvokeVoidAsync("alert", "يجب ان لا يزيد حجم الملف المرفق عن 5MB رجاءً");
-    //        }
-    //        else
-    //        {
-    //            await _js.InvokeVoidAsync("alert", "تم ارفاق الملف بنجاح");
-    //            UplaodedDawaImage = UploadedFile;
-    //        }
-
-    //    }
-    //    else
-    //    {
-    //        await _js.InvokeVoidAsync("alert", "نوع الملف غير مطابق");
-    //        return;
-    //    }
-    //}
     private async Task<string> UploadDawaImageToFileSystem()
     {
         if (UplaodedBookImage is not null)
@@ -329,7 +305,6 @@
             return "";
         }
 
-
     }
     private async Task UpdateCurrentTime()
     {
@@ -341,5 +316,9 @@
             await Task.Delay(1000); // Delay for 1 second
         }
     }
+    
+
+
+
 }
 
