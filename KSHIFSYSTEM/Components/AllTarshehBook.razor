@@ -42,7 +42,7 @@
                     <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Add" OnClick="(()=>AddTarshehBookResult(context.Item))" />
                 </CellTemplate>
             </TemplateColumn>
-            <PropertyColumn Format="dd.MM.yyyy" Property="x => x.KshifResult" Title="نتيجة الكشف " />
+            <PropertyColumn  Property="x => x.KshifResult" Title="نتيجة الكشف " />
 
             <TemplateColumn>
                 <CellTemplate>
@@ -424,7 +424,7 @@
     public string JobTitle13;
     public string JobTitle14;
     public string JobTitle15;
-    
+
     private IEnumerable<TarshehBook> Elements = new List<TarshehBook>();
     private List<TarshehBook> SpecificRecords { get; set; } = new List<TarshehBook>();
     public List<TarshehBook> ListOfDeletedBooks { get; set; } = new List<TarshehBook>();
@@ -540,7 +540,16 @@
     private async void printSelectedItem()
     {
         SpecificRecords = await _Tarsheh.GetSpecificBooks(ListOfDeletedBooks.Select(a=>a.ID).ToList());
-        await _js.InvokeVoidAsync("print", "Area2");
+        if(SpecificRecords is null)
+        {
+            await _js.InvokeVoidAsync("alert", "اعد المحاولة");
+
+        }
+        else
+        {
+            await _js.InvokeVoidAsync("print", "Area2");
+
+        }
     }
     private async Task StartedEditingItemFunction(TarshehBook item)
     {

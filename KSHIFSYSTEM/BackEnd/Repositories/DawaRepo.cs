@@ -5,9 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using KSHIFSYSTEM.ViewModels;
 using Microsoft.AspNetCore.Components.Forms;
 
-
-
-
 namespace KSHIFSYSTEM.BackEnd.Repositories
 {
     public class DawaRepo : IDawa

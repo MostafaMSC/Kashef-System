@@ -52,9 +52,9 @@
 
     <div class="col" style="margin-bottom:10px">
 
-        <MudBadge Class="div" Content="RemainBooks" Color="Color.Error" Elevation="4" Overlap="true" Bordered="true">
 
-            <MudCard Class="div" Elevation="15" Style="height:230px;overflow: auto">
+
+        <MudCard Class="div" Elevation="15" Style="height:230px;overflow: auto">
             <MudCardHeader>
                 <CardHeaderContent>
                     <MudText Typo="Typo.h6"><b> سجل الكتب الواردة للترشيح</b></MudText>
@@ -69,15 +69,16 @@
                 <MudText Typo="Typo.body2"> <b> عدد كتب المحاكم :</b>@Wared.Where(a=>a.KashefType == "محاكم").Count()    <b>عدد كتب العقارات : </b>@Wared.Where(a=>a.KashefType == "عقارات دولة").Count()  </MudText>
             </MudCardContent>
             <MudCardActions>
+                <MudBadge Class="div" Content="RemainBooks" Color="Color.Error" Elevation="4" Overlap="true" Bordered="true">
                 <MudButton Variant="Variant.Text" OnClick="@(()=>_nav.NavigateTo("/viewBooks"))" Color="Color.Primary">الذهاب الى صفحة السجل</MudButton>
+                </MudBadge>
+
             </MudCardActions>
         </MudCard>
-        </MudBadge> 
 	</div>
 
 
     <div class="col" style="margin-bottom:30px">
-        <MudBadge Class="div" Content="UnCompleteBooks" Color="Color.Error" Elevation="4" Overlap="true" Bordered="true">
             <MudCard Class="div" Elevation="15" Style="height:230px;overflow: auto">
                 <MudCardHeader>
                     <CardHeaderContent>
@@ -94,10 +95,13 @@
                     <MudText Typo="Typo.body2"><b>عدد كتب العقارات : </b>@Tarsheh.Where(a=>a.KshifType == "عقارات دولة").Count()   </MudText>
                  </MudCardContent>
                 <MudCardActions>
-                    <MudButton OnClick="@(()=>_nav.NavigateTo("/viewAllTarshehBooks"))" Variant="Variant.Text" Color="Color.Primary">الذهاب الى صفحة السجل</MudButton>
+                     <MudBadge Class="div" Content="UnCompleteBooks" Color="Color.Error" Elevation="4" Overlap="true" Bordered="true">
+
+                       <MudButton OnClick="@(()=>_nav.NavigateTo("/viewAllTarshehBooks"))" Variant="Variant.Text" Color="Color.Primary">الذهاب الى صفحة السجل</MudButton>
+                    </MudBadge>
+
                 </MudCardActions>
             </MudCard>
-        </MudBadge>
 	</div>
     <div class="col" style="margin-bottom:10px">
         <MudCard Class="div" Elevation="15" Style="height:230px;overflow: auto">

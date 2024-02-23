@@ -16,8 +16,12 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 
 
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(connectionString));
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString), ServiceLifetime.Scoped);
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

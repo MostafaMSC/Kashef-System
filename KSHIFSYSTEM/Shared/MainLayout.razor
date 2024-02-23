@@ -108,7 +108,7 @@
             <br />
             <footer style="margin-top:-20px"><center><b style="font-size:20px;color:white">Programmers: Mustafa Najem - Rana Talib</b></center></footer>
         </MudMainContent>
-
+        
         <div style="max-width:100%;
         padding: 1rem;
         box-sizing: border-box;
@@ -155,7 +155,7 @@
     protected override async Task OnInitializedAsync()
     {
 
-        await Task.Delay(2000);
+        // await Task.Delay(2000);
         ListOfBlockedSpecilest = await _SP.GetAllBlockedSpecialest();
     }
 

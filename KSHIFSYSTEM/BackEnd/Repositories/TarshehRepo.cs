@@ -153,7 +153,6 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
             try
             {
                 var Model = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == EditedEmp.Id);
-
                 Model.BookNo = EditedEmp.BookNo;
                 Model.KshifType = EditedEmp.KshifType;
                 Model.KshefDate = EditedEmp.KshefDate;

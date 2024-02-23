@@ -5,7 +5,7 @@
 @inject IDawa _Dawa
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-=<script>
+<script>
     function updateCurrentTime() 
         {
 
@@ -18,25 +18,25 @@
 </script>
 
 @attribute [Authorize(Roles = "admin,eatalaJazaea")]
-<AuthorizeView>
 <PageTitle>ادخال معلومات الكتاب الوارد</PageTitle>
-<center style="margin-bottom:20px">
-    <MudText Typo="Typo.h4" Style="color:white"><b> معلومات الكتاب الوارد لترشيح الخبراء</b> </MudText>
-</center>
 
-    <MudAlert Style="font-size:large;color:white" Severity="Severity.Success" Square="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Class="my-2" id="updateTime">
-        <div>
-                    @(Book.Update_Date.HasValue ? Book.Update_Date.Value.ToString("dd/MM/yyyy | hh:mm:ss") : "No Date")
 
-        </div>
+    <MudAlert Style="font-size:medium;color:white" Severity="Severity.Success" Square="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" id="updateTime">
+        
+            @(Book.Update_Date.HasValue ? Book.Update_Date.Value.ToString("dd/MM/yyyy | hh:mm:ss") : "No Date")
+            
+        
+
    </MudAlert>
-</AuthorizeView>
+
 
 
 <div style="border:solid;padding:20px;background-color:ghostwhite; elevation:2; border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
-
+    <center>
+        <MudText Typo="Typo.h6" Style="color:#00695C"><b> معلومات الكتاب الوارد لترشيح الخبراء</b> </MudText>
+    </center>
     
-    <br />
+    
     <EditForm OnValidSubmit="SaveData" Model="Book">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -150,39 +150,46 @@
         </div>
         <br />
 
-        <div>
-            <center><MudText Typo="Typo.h5" Style="color:#00695C"> استمارة شؤون المواطنين    </MudText></center>
+        <div class="row row-cols-2" >
+            <div class="col">
 
-            <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1" style="border:solid;padding:20px; border-color:#00695C;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
-                <div class="col">
-                    <MudItem>
-                        <MudTextField Required="true" Style="background-color:white" Label="رقم الاستمارة" T="int?" Variant="Variant.Outlined" @bind-Value="@Book.AstmaraNoP" />
-                    </MudItem>
+
+                <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 row-cols-1" style="border:solid;padding:20px; border-color:#00695C;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+                    <center><MudText Typo="Typo.h6" Style="color:#00695C"> استمارة قسم شؤون المواطنين    </MudText></center>
+
+                    <div class="col">
+                        <MudItem>
+                            <MudTextField Required="true" Style="background-color:white" Label="رقم الاستمارة" T="int?" Variant="Variant.Outlined" @bind-Value="@Book.AstmaraNoP" />
+                        </MudItem>
+                    </div>
+                    <div class="col">
+                        <MudItem>
+                            <MudDatePicker Required="true" Label="تاريخ  الاستمارة" @bind-Date="@Book.AstmaraDateP" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
+                        </MudItem>
+                    </div>
                 </div>
-                <div class="col">
-                    <MudItem>
-                        <MudDatePicker Required="true" Label="تاريخ  الاستمارة"  @bind-Date="@Book.AstmaraDateP" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
-                    </MudItem>
+
+            </div>
+
+
+            <div class="col">
+                <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 row-cols-1" style="border:solid;padding:20px; border-color:#00695C;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+                    <center><MudText Typo="Typo.h6" Style="color:#00695C"> استمارة قسم الموجودات    </MudText></center>
+
+                    <div class="col">
+                        <MudItem>
+                            <MudTextField Required="true" Style="background-color:white" Label="رقم الاستمارة" T="int?" Variant="Variant.Outlined" @bind-Value="@Book.AstmaraNoM" />
+                        </MudItem>
+                    </div>
+                    <div class="col">
+                        <MudItem>
+                            <MudDatePicker Required="true" @bind-Date="@Book.AstmaraDateM" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
+                        </MudItem>
+                    </div>
                 </div>
             </div>
-            <br />
-            <br />
-            <center><MudText Typo="Typo.h5" Style="color:#00695C"> استمارة من قسم الموجودات    </MudText></center>
 
-
-            <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1" style="border:solid;padding:20px; border-color:#00695C;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
-
-                <div class="col">
-                    <MudItem>
-                        <MudTextField Required="true" Style="background-color:white" Label="رقم الاستمارة" T="int?" Variant="Variant.Outlined" @bind-Value="@Book.AstmaraNoM" />
-                    </MudItem>
-                </div>
-                <div class="col">
-                    <MudItem>
-                        <MudDatePicker Required="true" @bind-Date="@Book.AstmaraDateM" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
-                    </MudItem>
-                </div>
-            </div>
+            
         </div>
 
         <div>
@@ -200,19 +207,24 @@
                     <MudDatePicker Required="true" Label="تاريخ  الوصل" @bind-Date="@Book.AlwasilDate" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="ادخل التاريخ " />
                 </MudItem>
             </div>
-
+            <br />
         </div>
-        <div>
-            <center><label style="font-size:20px;margin:20px"><b>رفع صورة الكتاب</b></label></center>
-            <MudItem>
-                <InputFile Required="true" accept=".pdf" class="form-control" style="background-color:transparent" OnChange="CheckFile" />
-            </MudItem>
+        <br />
+        <div class="row row-cols-2">
+            <div class="col-2" >
+                <center><label style="font-size:18px; color:#00695C"><b>رفع الكتاب</b></label></center>
+
+            </div>
+            <div class="col-10  ">
+                <MudItem>
+                    <InputFile Required="true" accept=".pdf" class="form-control" style="background-color:transparent" OnChange="CheckFile" />
+                </MudItem>
+            </div>
+            
         </div>
         <br />
         <MudButton ButtonType="ButtonType.Submit" FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Tertiary" Size="Size.Large"><b style="color:#00695C">حفظ الكتاب</b></MudButton>
 
-         <br />
-         <br />
      </EditForm>
  </div>
 
