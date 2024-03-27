@@ -18,100 +18,119 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
             _env = env;
 
         }
-        public async Task<string> AddNewDawaToTheSystem (BookInfo NewBook)
-        {   
-            
-            await _db.BookTable.AddAsync (NewBook);
+        public async Task<string> AddNewDawaToTheSystem(BookInfo NewBook)
+        {
+            try
+            {
 
-            await _db.SaveChangesAsync();
-            return "تمت اضافة الكتاب الى النظام";
+                await _db.BookTable.AddAsync(NewBook);
+
+                await _db.SaveChangesAsync();
+                return "تمت اضافة الكتاب الى النظام";
+            }
+            catch (Exception ex)
+            {
+
+                // Log the exception or handle it appropriately
+                return $"حدث خطأ أثناء إضافة الكتاب إلى النظام: {ex.Message}";
+
+            }
         }
         public async Task<bool> CheckIfDawaExistsInDB(BookInfo Newbook)
         {
-            var CheckIfDawaExistsInDB = await _db.BookTable.FirstOrDefaultAsync(a => a.BookNo == Newbook.BookNo);
-
-            if (CheckIfDawaExistsInDB is null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            var existsInDB = await _db.BookTable.AnyAsync(a => a.BookNo == Newbook.BookNo);
+            return existsInDB;
         }
 
-        public async Task<string> DeleteDawa(int DawaId)
+        public async Task<string> DeleteDawa(int dawaId)
         {
             try
             {
-                var DeletedDawa = await _db.SpecialestTable.FirstOrDefaultAsync(a => a.ID == DawaId);
-                _db.SpecialestTable.Remove(DeletedDawa);
-                await _db.SaveChangesAsync();
-                return $"{DawaId} deleted Successfully";
-            }
-            catch (Exception Error)
-            {
+                var deletedDawa = await _db.SpecialestTable.FirstOrDefaultAsync(a => a.ID == dawaId);
 
-                return Error.Message;
-            }
-
-        }
-        public async Task<string> DeleteListOfDawas(List<int> ListOfDeletedDawas)
-        {
-            try
-            {
-                var ListOfDeletedDawa = new List<BookInfo>();
-
-                foreach (var item in ListOfDeletedDawas)
+                if (deletedDawa != null)
                 {
-                    var Dawa = await _db.BookTable.FirstOrDefaultAsync(a => a.Id == item);
-                    ListOfDeletedDawa.Add(Dawa);
+                    _db.SpecialestTable.Remove(deletedDawa);
+                    await _db.SaveChangesAsync();
+                    return $"{dawaId} deleted successfully";
                 }
-                _db.BookTable.RemoveRange(ListOfDeletedDawa);
-                await _db.SaveChangesAsync();
-                return "تم الحذف بنجاح ";
-
+                else
+                {
+                    return $"Dawa with ID {dawaId} not found";
+                }
             }
-            catch (Exception Error)
+            catch (Exception error)
             {
-
-                return Error.Message;
+                return $"An error occurred: {error.Message}";
             }
         }
-        public async Task<bool> EditEmp(DaawaModel EditedData, InputFileChangeEventArgs EditedPic)
+
+        public async Task<string> DeleteListOfDawas(List<int> listOfDeletedDawas)
         {
-            if (EditedPic is null)
+            try
             {
-                _db.DawwaTable.Update(EditedData);
-                await _db.SaveChangesAsync();
-                return true;
+                if (listOfDeletedDawas == null || listOfDeletedDawas.Count == 0)
+                {
+                    return "List is empty or null.";
+                }
+
+                var listOfDeletedDawa = new List<BookInfo>();
+
+                foreach (var item in listOfDeletedDawas)
+                {
+                    var dawa = await _db.BookTable.FirstOrDefaultAsync(a => a.Id == item);
+
+                    if (dawa != null)
+                    {
+                        listOfDeletedDawa.Add(dawa);
+                    }
+                    // Optionally: Handle the case when 'dawa' is null (e.g., log or return an error message)
+                }
+
+                if (listOfDeletedDawa.Count > 0)
+                {
+                    _db.BookTable.RemoveRange(listOfDeletedDawa);
+                    await _db.SaveChangesAsync();
+                    return "تم الحذف بنجاح";
+                }
+                else
+                {
+                    return "No valid Dawas found to delete.";
+                }
             }
-            else
+            catch (Exception error)
             {
-                return false;
+                return $"An error occurred: {error.Message}";
             }
         }
+
+
         public async Task<List<BookInfo>> GetAllDawas()
         {
-            var ListOfDawas = await _db.BookTable.ToListAsync();
-            return ListOfDawas;
+            try
+            {
+                return await _db.BookTable.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception according to your application's error-handling strategy
+                throw; // Re-throw the exception to indicate that an error occurred
+            }
         }
+
 
 
         private async Task<string> UploadUserImageToFileSystem(InputFileChangeEventArgs UploadedImage, string EmpName)
         {
 
             var FileName = EmpName + "_" + Guid.NewGuid().ToString() + $"{UploadedImage.File.Name}";
-            // MohammedAbdull_109273918628736127835gbegt675e
             var FolderPath = $"{_env.WebRootPath}\\DawaImages";
-            // var FullPath = //server/wwwroot/EmpImages/FileName
             var FullPath = Path.Combine(FolderPath, FileName);
 
             var MemoryStream = new MemoryStream();
             await UploadedImage.File.OpenReadStream(2000000).CopyToAsync(MemoryStream);
 
 
-            // FileMode : to give permission to the filestream to create files
             await using (var fs = new FileStream(FullPath, FileMode.Create, FileAccess.Write))
             {
                 MemoryStream.WriteTo(fs);
@@ -119,94 +138,87 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
 
             return FolderPath;
         }
-
-
-        private void DeleteOldUserImage(string OldImagePath)
+        public async Task<EmpViewModel> GetEmpViewModelByUserId(int id)
         {
-            if (File.Exists(OldImagePath) == true)
+            var model = await _db.BookTable.FirstOrDefaultAsync(a => a.Id == id);
+
+            if (model == null)
             {
-                File.Delete(OldImagePath);
+                return null; // or throw an exception, depending on your requirements
             }
+
+            var empViewModel = new EmpViewModel
+            {
+                Id = model.Id,
+                BookNo = model.BookNo,
+                KashefType = model.KashefType,
+                KshefDate = model.KshefDate,
+                BookPic = model.BookPic,
+                BookDate = model.BookDate,
+                JahaName = model.JahaName,
+                PlaceNo = model.PlaceNo,
+                MokataNO = model.MokataNO,
+                AstmaraDateM = model.AstmaraDateM,
+                AstmaraDateP = model.AstmaraDateP,
+                AstmaraNoP = model.AstmaraNoP,
+                AstmaraNoM = model.AstmaraNoM,
+                City = model.City,
+                AddadAlkhobraa = model.AddadAlkhobraa,
+                AlwasilDate = model.AlwasilDate,
+                AlwasilNo = model.AlwasilNo,
+                HayaBookDate = model.HayaBookDate,
+                HayaBookNo = model.HayaBookNo
+            };
+
+            return empViewModel;
         }
 
-        //public async Task<List<EmpModel>> GetListOfAllEmps()
-        //{
-        //    var ListOfEmps = await _db.EmpTable.AsNoTracking().Include(a=>a.DeptTable).ThenInclude(a=>a.OfficeTable).ToListAsync();
-        //    return ListOfEmps;
-        //}
-
-
-
-
-        public async Task<EmpViewModel> GetEmpViewModelByUserId(int Id)
-        {
-            var Model = await _db.BookTable.FirstOrDefaultAsync(a => a.Id == Id);
-
-            var EmpViewModel = new EmpViewModel();
-            EmpViewModel.Id = Model.Id;
-            EmpViewModel.BookNo = Model.BookNo;
-            EmpViewModel.KashefType = Model.KashefType;
-            EmpViewModel.KshefDate = Model.KshefDate;
-            EmpViewModel.BookPic = Model.BookPic;
-            EmpViewModel.BookDate = Model.BookDate;
-            EmpViewModel.JahaName = Model.JahaName;
-            EmpViewModel.PlaceNo = Model.PlaceNo;
-            EmpViewModel.MokataNO = Model.MokataNO;
-
-            EmpViewModel.AstmaraDateM = Model.AstmaraDateM;
-            EmpViewModel.AstmaraDateP = Model.AstmaraDateP;
-            EmpViewModel.AstmaraNoP = Model.AstmaraNoP;
-            EmpViewModel.AstmaraNoM = Model.AstmaraNoM;
-            EmpViewModel.City = Model.City;
-
-            //EmpViewModel.EmpDep = Model.EmpDep;
-            EmpViewModel.AddadAlkhobraa = Model.AddadAlkhobraa;
-            EmpViewModel.AlwasilDate = Model.AlwasilDate;
-            EmpViewModel.AlwasilNo = Model.AlwasilNo;
-            EmpViewModel.HayaBookDate = Model.HayaBookDate;
-            EmpViewModel.HayaBookNo = Model.HayaBookNo;
-
-            return EmpViewModel;
-        }
-        public async Task<string> EditEmpViewModel(EmpViewModel EditedEmp)
+        public async Task<string> EditEmpViewModel(EmpViewModel editedEmp)
         {
             try
             {
-                var Model = await _db.BookTable.FirstOrDefaultAsync(a => a.Id == EditedEmp.Id);
+                var model = await _db.BookTable.FirstOrDefaultAsync(a => a.Id == editedEmp.Id);
 
-                Model.BookNo = EditedEmp.BookNo;
-                Model.KashefType = EditedEmp.KashefType;
-                Model.KshefDate = EditedEmp.KshefDate;
-                Model.BookPic = EditedEmp.BookPic;
-                Model.BookDate = EditedEmp.BookDate;
-                Model.AstmaraDateM = EditedEmp.AstmaraDateM;
-                Model.AstmaraDateP = EditedEmp.AstmaraDateP;
-                Model.JahaName = EditedEmp.JahaName;
-                Model.PlaceNo = EditedEmp.PlaceNo;
-                Model.MokataNO = EditedEmp.MokataNO;
-                Model.AstmaraNoP = EditedEmp.AstmaraNoP;
-                Model.AstmaraNoM = EditedEmp.AstmaraNoM;
-                Model.City = EditedEmp.City;
-                Model.AddadAlkhobraa = EditedEmp.AddadAlkhobraa;
-                Model.AlwasilDate = EditedEmp.AlwasilDate;
-                Model.AlwasilNo = EditedEmp.AlwasilNo;
-                Model.HayaBookDate = EditedEmp.HayaBookDate;
-                Model.HayaBookNo = EditedEmp.HayaBookNo;
-                _db.BookTable.Update(Model);
+                if (model == null)
+                {
+                    return "Record not found"; // or throw an exception, depending on your requirements
+                }
+
+                model.BookNo = editedEmp.BookNo;
+                model.KashefType = editedEmp.KashefType;
+                model.KshefDate = editedEmp.KshefDate;
+                model.BookPic = editedEmp.BookPic;
+                model.BookDate = editedEmp.BookDate;
+                model.AstmaraDateM = editedEmp.AstmaraDateM;
+                model.AstmaraDateP = editedEmp.AstmaraDateP;
+                model.JahaName = editedEmp.JahaName;
+                model.PlaceNo = editedEmp.PlaceNo;
+                model.MokataNO = editedEmp.MokataNO;
+                model.AstmaraNoP = editedEmp.AstmaraNoP;
+                model.AstmaraNoM = editedEmp.AstmaraNoM;
+                model.City = editedEmp.City;
+                model.AddadAlkhobraa = editedEmp.AddadAlkhobraa;
+                model.AlwasilDate = editedEmp.AlwasilDate;
+                model.AlwasilNo = editedEmp.AlwasilNo;
+                model.HayaBookDate = editedEmp.HayaBookDate;
+                model.HayaBookNo = editedEmp.HayaBookNo;
+
+                _db.BookTable.Update(model);
                 await _db.SaveChangesAsync();
-                return "The Recored has been edited succesfully";
 
+                return "The record has been edited successfully";
             }
             catch (Exception e)
             {
-                return e.Message;
+                return $"An error occurred: {e.Message}";
             }
         }
 
+
         public async Task<BookInfo> GetBookInfo(int BookNo)
         {
-            var BookRecord = await _db.BookTable.FirstOrDefaultAsync(a=>a.BookNo == BookNo);
-           
+            var BookRecord = await _db.BookTable.FirstOrDefaultAsync(a => a.BookNo == BookNo);
+
             return BookRecord;
         }
 
@@ -214,31 +226,22 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
         {
             var CheckIfDawaExistsInDB = await _db.BookTable.FirstOrDefaultAsync(a => a.BookNo == BookNo);
 
-            if (CheckIfDawaExistsInDB is null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return CheckIfDawaExistsInDB != null;
+
         }
         public async Task<List<BookInfo>> GetSpecificBooks(List<int> SpecificRecords)
         {
 
             var ListOfSelected = new List<BookInfo>();
 
-            foreach (var item in SpecificRecords)
-            {
-                var TarshehRecord = await _db.BookTable.FirstOrDefaultAsync(a => a.Id == item);
-                ListOfSelected.Add(TarshehRecord);
-
-            }
+            var listOfSelected = await _db.BookTable
+        .Where(a => SpecificRecords.Contains(a.Id))
+        .ToListAsync();
             return ListOfSelected;
 
         }
 
-       
+
     }
 }
 

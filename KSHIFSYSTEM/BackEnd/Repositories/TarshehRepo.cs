@@ -3,11 +3,10 @@ using KSHIFSYSTEM.BackEnd.Interfaces;
 using KSHIFSYSTEM.Data;
 using KSHIFSYSTEM.Models;
 using KSHIFSYSTEM.ViewModels;
-using MudBlazor.Extensions;
 
 namespace KSHIFSYSTEM.BackEnd.Repositories
 {
-    public class TarshehRepo :ITarsheh
+    public class TarshehRepo : ITarsheh
     {
         private readonly ApplicationDbContext _db;
         public TarshehRepo(ApplicationDbContext db)
@@ -16,28 +15,18 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
         }
         public async Task<bool> CheckIfSpecialestExistsInDB(TarshehBook NewSpecialest)
         {
-            var CheckIfSpeacialestExistsInDB = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == NewSpecialest.ID);
-            if (CheckIfSpeacialestExistsInDB is null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            var existingSpecialist = await _db.TarshehBookTable
+            .FirstOrDefaultAsync(a => a.ID == NewSpecialest.ID);
+
+            return existingSpecialist != null;
+
         }
 
         public async Task<bool> CheckIfBookExistsInDB(int BookNo)
         {
             var CheckIfSpeacialestExistsInDB = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.BookNo == BookNo);
-            if (CheckIfSpeacialestExistsInDB is null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return CheckIfSpeacialestExistsInDB != null;
+
         }
         public async Task<string> AddNewSpecialestToTheSystem(TarshehBook AddNewSpecialest)
         {
@@ -49,167 +38,172 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
 
         public async Task<List<TarshehBook>> GetAllTarshehBooks()
         {
-            var ListOfTarshehBooks = await _db.TarshehBookTable.ToListAsync();
-            return ListOfTarshehBooks;
+            return await _db.TarshehBookTable.ToListAsync();
+
         }
 
         public async Task<bool> GetOneBook(int BOOKNO)
         {
-            var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a=>a.BookNo == BOOKNO);
-            if (Record is null)
-            { return false; }
-            else
-            {
-                if (Record.KshifResult is null)
-                { return false; }
-                else
-                {
-                    return true;
+            var record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.BookNo == BOOKNO);
+            return record != null && record.KshifResult != null;
 
-
-                }
-            }   
         }
 
         public async Task<List<TarshehBook>> GetSpecificBooks(List<int> SpecificRecords)
         {
-            
-                var ListOfSelected = new List<TarshehBook>();
 
-                foreach (var item in SpecificRecords)
-                {
-                    var TarshehRecord = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == item);
-                    ListOfSelected.Add(TarshehRecord);
-                       
-                }
-                return ListOfSelected;            
-            
+            var listOfSelected = await _db.TarshehBookTable
+                .Where(a => SpecificRecords.Contains(a.ID))
+                .ToListAsync();
+
+            return listOfSelected;
+
+
         }
         public async Task<string> DeleteListOfDawas(List<int> ListOfDeletedDawas)
         {
             try
             {
-                var ListOfDeletedDawa = new List<TarshehBook>();
+                var listOfDeletedDawa = await _db.TarshehBookTable
+                    .Where(a => ListOfDeletedDawas.Contains(a.ID))
+                    .ToListAsync();
 
-                foreach (var item in ListOfDeletedDawas)
-                {
-                    var Dawa = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == item);
-                    ListOfDeletedDawa.Add(Dawa);
-                }
-                _db.TarshehBookTable.RemoveRange(ListOfDeletedDawa);
+                _db.TarshehBookTable.RemoveRange(listOfDeletedDawa);
                 await _db.SaveChangesAsync();
-                return "تم الحذف بنجاح ";
 
+                return "تم الحذف بنجاح";
             }
-            catch (Exception Error)
+            catch (DbUpdateException ex)
             {
-
-                return Error.Message;
+                // Log the exception or handle it as appropriate for your application
+                return "حدث خطأ أثناء الحذف: " + ex.Message;
             }
+
         }
         public async Task<TarshehViewModel> GetTarshehViewModelByUserId(int Id)
         {
-            var Model = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == Id);
+            var model = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == Id);
 
-            var EmpViewModel = new TarshehViewModel();
-            EmpViewModel.Id = Model.ID;
-            EmpViewModel.BookNo = Model.BookNo;
-            EmpViewModel.KshifType = Model.KshifType;
-            EmpViewModel.JehaName = Model.JehaName;
+            var empViewModel = new TarshehViewModel
+            {
+                Id = model.ID,
+                BookNo = model.BookNo,
+                KshifType = model.KshifType,
+                JehaName = model.JehaName,
+                KshefDate = model.KshefDate,
+                BookDate = model.BookDate,
+                SpecaialName1 = model.SpecaialName1,
+                WasilNoP = model.WasilNoP,
+                AlwasilNo = model.AlwasilNo,
+                AlwasilDate = model.AlwasilDate,
+                WasilDateP = model.WasilDateP,
+                WasilDateM = model.WasilDateM,
+                WasilNoM = model.WasilNoM,
+                city = model.city,
+                SpecaialName2 = model.SpecaialName2,
+                SpecaialName3 = model.SpecaialName3,
+                SpecaialName4 = model.SpecaialName4,
+                SpecaialName5 = model.SpecaialName5,
+                SpecaialName6 = model.SpecaialName6,
+                SpecaialName7 = model.SpecaialName7,
+                SpecaialName8 = model.SpecaialName8,
+                SpecaialName9 = model.SpecaialName9,
+                SpecaialName10 = model.SpecaialName10,
+                SpecaialName11 = model.SpecaialName11,
+                SpecaialName12 = model.SpecaialName12,
+                SpecaialName13 = model.SpecaialName13,
+                SpecaialName14 = model.SpecaialName14,
 
-            EmpViewModel.KshefDate = Model.KshefDate;
-            EmpViewModel.BookDate = Model.BookDate;
-            EmpViewModel.SpecaialName1 = Model.SpecaialName1;
-            EmpViewModel.WasilNoP = Model.WasilNoP;
-            EmpViewModel.AlwasilNo = Model.AlwasilNo;
-            EmpViewModel.AlwasilDate = Model.AlwasilDate;
-
-            EmpViewModel.WasilDateP = Model.WasilDateP;
-            EmpViewModel.WasilDateM = Model.WasilDateM;
-            EmpViewModel.WasilNoM = Model.WasilNoM;
-            EmpViewModel.WasilNoM = Model.WasilNoM;
-            EmpViewModel.city = Model.city;
-            EmpViewModel.SpecaialName2 = Model.SpecaialName2;
-            EmpViewModel.SpecaialName3 = Model.SpecaialName3;
-            EmpViewModel.SpecaialName4 = Model.SpecaialName4;
-            EmpViewModel.SpecaialName5 = Model.SpecaialName5;
-            EmpViewModel.SpecaialName6 = Model.SpecaialName6;
-            EmpViewModel.SpecaialName7 = Model.SpecaialName7;
-            EmpViewModel.SpecaialName8 = Model.SpecaialName8;
-            EmpViewModel.SpecaialName9 = Model.SpecaialName9;
-            EmpViewModel.SpecaialName10 = Model.SpecaialName10;
+                SpecaialName15 = model.SpecaialName15,
 
 
-            //EmpViewModel.EmpDep = Model.EmpDep;
-            EmpViewModel.KshefDate = Model.KshefDate;
-            EmpViewModel.PlaceNo = Model.PlaceNo;
-            EmpViewModel.HayaBookDate = Model.HayaBookDate;
-            EmpViewModel.HayaBookNo = Model.HayaBookNo;
+                PlaceNo = model.PlaceNo,
+                MokataNO = model.MokataNO,
 
-            return EmpViewModel;
+                HayaBookDate = model.HayaBookDate,
+                HayaBookNo = model.HayaBookNo
+            };
+
+            return empViewModel;
+
         }
         public async Task<string> EditTarshehViewModel(TarshehViewModel EditedEmp)
         {
             try
             {
-                var Model = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == EditedEmp.Id);
-                Model.BookNo = EditedEmp.BookNo;
-                Model.KshifType = EditedEmp.KshifType;
-                Model.KshefDate = EditedEmp.KshefDate;
-                Model.BookDate = EditedEmp.BookDate;
-                Model.AlwasilDate = EditedEmp.AlwasilDate;
-                Model.AlwasilNo = EditedEmp.AlwasilNo;
-                Model.city = EditedEmp.city;
-                Model.PlaceNo = EditedEmp.PlaceNo;
-                Model.WasilDateM = EditedEmp.WasilDateM;
-                Model.WasilDateP = EditedEmp.WasilDateP;
-                Model.WasilNoM = EditedEmp.WasilNoM;
-                Model.WasilNoP = EditedEmp.WasilNoP;
-                Model.HayaBookDate = EditedEmp.HayaBookDate;
-                Model.HayaBookNo = EditedEmp.HayaBookNo;
-                Model.JehaName = EditedEmp.JehaName;
+                var existingModel = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == EditedEmp.Id);
 
-                Model.SpecaialName1 = EditedEmp.SpecaialName1;
-                Model.SpecaialName2 = EditedEmp.SpecaialName2;
-                Model.SpecaialName3 = EditedEmp.SpecaialName3;
-                Model.SpecaialName4 = EditedEmp.SpecaialName4;
-                Model.SpecaialName5 = EditedEmp.SpecaialName5;
-                Model.SpecaialName6 = EditedEmp.SpecaialName6;
-                Model.SpecaialName7 = EditedEmp.SpecaialName7;
-                Model.SpecaialName8 = EditedEmp.SpecaialName8;
-                Model.SpecaialName9 = EditedEmp.SpecaialName9;
-                Model.SpecaialName10 = EditedEmp.SpecaialName10;
+                if (existingModel != null)
+                {
+                    existingModel.BookNo = EditedEmp.BookNo;
+                    existingModel.KshifType = EditedEmp.KshifType;
+                    existingModel.KshefDate = EditedEmp.KshefDate;
+                    existingModel.BookDate = EditedEmp.BookDate;
+                    existingModel.AlwasilDate = EditedEmp.AlwasilDate;
+                    existingModel.AlwasilNo = EditedEmp.AlwasilNo;
+                    existingModel.city = EditedEmp.city;
+                    existingModel.PlaceNo = EditedEmp.PlaceNo;
+                    existingModel.MokataNO = EditedEmp.MokataNO;
 
+                    existingModel.WasilDateM = EditedEmp.WasilDateM;
+                    existingModel.WasilDateP = EditedEmp.WasilDateP;
+                    existingModel.WasilNoM = EditedEmp.WasilNoM;
+                    existingModel.WasilNoP = EditedEmp.WasilNoP;
+                    existingModel.HayaBookDate = EditedEmp.HayaBookDate;
+                    existingModel.HayaBookNo = EditedEmp.HayaBookNo;
+                    existingModel.JehaName = EditedEmp.JehaName;
 
-                _db.TarshehBookTable.Update(Model);
-                await _db.SaveChangesAsync();
-                return "The Recored has been edited succesfully";
+                    existingModel.SpecaialName1 = EditedEmp.SpecaialName1;
+                    existingModel.SpecaialName2 = EditedEmp.SpecaialName2;
+                    existingModel.SpecaialName3 = EditedEmp.SpecaialName3;
+                    existingModel.SpecaialName4 = EditedEmp.SpecaialName4;
+                    existingModel.SpecaialName5 = EditedEmp.SpecaialName5;
+                    existingModel.SpecaialName6 = EditedEmp.SpecaialName6;
+                    existingModel.SpecaialName7 = EditedEmp.SpecaialName7;
+                    existingModel.SpecaialName8 = EditedEmp.SpecaialName8;
+                    existingModel.SpecaialName9 = EditedEmp.SpecaialName9;
+                    existingModel.SpecaialName10 = EditedEmp.SpecaialName10;
+                    existingModel.SpecaialName11 = EditedEmp.SpecaialName11;
+                    existingModel.SpecaialName12 = EditedEmp.SpecaialName12;
+                    existingModel.SpecaialName13 = EditedEmp.SpecaialName13;
+                    existingModel.SpecaialName14 = EditedEmp.SpecaialName14;
+                    existingModel.SpecaialName15 = EditedEmp.SpecaialName15;
 
+                    _db.TarshehBookTable.Update(existingModel);
+                    await _db.SaveChangesAsync();
+
+                    return "The record has been edited successfully";
+                }
+                else
+                {
+                    return "Record not found for the given ID";
+                }
             }
             catch (Exception e)
             {
-                return e.Message;
+                return $"An error occurred while editing the record: {e.Message}";
             }
+
         }
 
         public async Task<string> DeleteSpecailestName1(int Id, string SpecilestName)
         {
-            var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a=>a.ID == Id);
-            
+            var record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == Id);
 
-            if (Record == null)
+            if (record == null)
             {
                 return "لم يتم الحذف";
             }
-            else if (Record.SpecaialName1 == SpecilestName)
+
+            if (record.SpecaialName1 == SpecilestName)
             {
-                Record.SpecaialName1 = null;
+                record.SpecaialName1 = null;
                 await _db.SaveChangesAsync();
                 return "تم الحذف";
-
-
             }
+
             return "لم يتم الحذف";
+
         }
         public async Task<string> DeleteSpecailestName2(int Id, string SpecilestName)
         {
@@ -386,28 +380,16 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
 
         public async Task<bool> CheckIfTheBookResultsAddedPIC(int BookNO)
         {
-            var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.BookNo == BookNO);
-            if (Record is null)
-            { return false; }
-            else
-            {
-                if (Record.KshifResultPicture is "")
-                { 
-                    return false; 
-                }
-                else
-                {
-                    return true;
+            var record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.BookNo == BookNO);
 
+            return record != null && !string.IsNullOrEmpty(record.KshifResultPicture);
 
-                }
-            }
         }
 
         public async Task<List<TarshehBook>> GetSpecialInfoByName(string Name)
         {
 
-            var ListOfTarshehBooks = await _db.TarshehBookTable.Where(a=>a.SpecaialName1 == Name || a.SpecaialName2 == Name || a.SpecaialName3 == Name
+            var ListOfTarshehBooks = await _db.TarshehBookTable.Where(a => a.SpecaialName1 == Name || a.SpecaialName2 == Name || a.SpecaialName3 == Name
             || a.SpecaialName4 == Name || a.SpecaialName5 == Name || a.SpecaialName6 == Name || a.SpecaialName7 == Name
             || a.SpecaialName8 == Name || a.SpecaialName9 == Name || a.SpecaialName10 == Name || a.SpecaialName11 == Name
             || a.SpecaialName12 == Name || a.SpecaialName13 == Name || a.SpecaialName14 == Name || a.SpecaialName15 == Name).ToListAsync();
@@ -417,35 +399,20 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
 
         public async Task<string> GetSpecialJobTitle(string Name)
         {
-            var SpecialRecord = await _db.SpecialestTable.FirstOrDefaultAsync(a=>a.Name == Name);
-            if (SpecialRecord != null)
-            {
-                {
-                    var Job = SpecialRecord.JobTitle;
-                    return Job;
-                }
-            }
-            else
-            {
-                return "";
-            }
-               
+            var specialRecord = await _db.SpecialestTable.FirstOrDefaultAsync(a => a.Name == Name);
 
-           
+            return specialRecord?.JobTitle ?? "";
+
+
+
+
         }
 
         public int TotalUncompleteBooks(IEnumerable<TarshehBook> ListOfTarshehBooks)
         {
-            int total = 0;
-            foreach(var book in ListOfTarshehBooks)
-            {
-                if (book.KshifResultPicture == null)
-                {
-                    total++;
-                }
-                
-            }
+            int total = ListOfTarshehBooks.Count(book => book.KshifResultPicture == null);
             return total;
+
         }
     }
 }

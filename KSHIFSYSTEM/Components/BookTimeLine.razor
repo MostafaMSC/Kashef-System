@@ -15,7 +15,7 @@
         <br />
         <MudButton OnClick="SpecificTimeLine" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.TrackChanges" IconColor="Color.Tertiary" Size="Size.Large"><b style="color:#00695C">تتبع الكتاب</b></MudButton>
 
-       <br />
+        <br />
     </center>
     <br />
     <MudTimeline Style="margin:30px">
@@ -23,44 +23,50 @@
         {
             <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success">
                 <MudText Typo="Typo.button">تم ادخال الكتاب الوارد في النظام</MudText>
-@*                 <MudText Typo="Typo.body2" on Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
- *@            </MudTimelineItem>
+                @*                 <MudText Typo="Typo.body2" on Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+            *@
+            </MudTimelineItem>
         }
         else
         {
             <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default">
                 <MudText Typo="Typo.button">تم ادخال الكتاب الوارد في النظام</MudText>
-@*                 <MudText Typo="Typo.body2" on Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
- *@            </MudTimelineItem>
+                @*                 <MudText Typo="Typo.body2" on Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+            *@
+            </MudTimelineItem>
         }
         @if (Stage2)
         {
             <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success" TimelineAlign="TimelineAlign.End">
                 <MudText Typo="Typo.body2"> تم ترشيح الخبراء</MudText>
-@*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
- *@            </MudTimelineItem>
+                @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+            *@
+            </MudTimelineItem>
 
         }
         else
         {
             <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default" TimelineAlign="TimelineAlign.End">
                 <MudText Typo="Typo.body2"> تم ترشيح الخبراء</MudText>
-@*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
- *@            </MudTimelineItem>
+                @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+            *@
+            </MudTimelineItem>
         }
-        @if (Stage3 == true || Stage4 ==true)
+        @if (Stage3 == true || Stage4 == true)
         {
             <MudTimelineItem Size="Size.Large" Elevation="4" Color="Color.Success" TimelineAlign="TimelineAlign.End">
                 <MudText Typo="Typo.body2">خرج الى الكشف ولم يسلم التقرير</MudText>
-@*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
- *@            </MudTimelineItem>
+                @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+            *@
+            </MudTimelineItem>
         }
         else
         {
             <MudTimelineItem Size="Size.Medium" Elevation="4" Color="Color.Default" TimelineAlign="TimelineAlign.End">
                 <MudText Typo="Typo.body2"> خرج الى الكشف ولم يسلم التقرير</MudText>
-@*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
- *@            </MudTimelineItem>
+                @*                 <MudText Typo="Typo.body2" Class="mud-text-secondary">@WaredBook.KshefDate</MudText>
+            *@
+            </MudTimelineItem>
         }
         @if (Stage4 == true)
         {

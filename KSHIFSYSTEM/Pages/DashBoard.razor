@@ -7,22 +7,24 @@
 @inject ApplicationDbContext _DB
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<script>
+@* <script>
     function updateCurrentTime() {
         CurrentTime = document.querySelector('updateTime');
         updateTime.innerText = CurrentTime;
-    }
+    
         }
     setInterval(updateCurrentTime, 1000);
 </script>
-<script src="/javascript/printreport.js"></script>
+ *@
+@* <script src="/javascript/printreport.js"></script>
+ *@
 @attribute [Authorize(Roles = "admin,eatalaJazaea")]
 <PageTitle>ترشيح للخبراء </PageTitle>
 
 <div class="row row-col-lg-2 row-col-md-1 row-col-sm-1">
-    <MudAlert Style="font-size:large" Severity="Severity.Success" Square="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Class="my-2" id="updateTime">
+@*     <MudAlert Style="font-size:large" Severity="Severity.Success" Square="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Class="my-2" id="updateTime">
         @(BookRecord.Update_Date.HasValue ? BookRecord.Update_Date.Value.ToString("dd/MM/yyyy | hh:mm:ss") : "No Date")
-    </MudAlert>
+    </MudAlert> *@
     <div class="col" style="border:solid;padding:20px; border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
         <EditForm OnValidSubmit="SaveData" Model="Tarsheh">
             <DataAnnotationsValidator />
@@ -308,7 +310,7 @@
         {
             UserName = user.Identity.Name;
         }
-        await UpdateCurrentTime();
+        // await UpdateCurrentTime();
         base.OnInitialized();
     }
     private Func<KshfInfoModule, object> _sortBy => x =>
@@ -549,16 +551,16 @@
         //    i++;
     //}
     }
-    private async Task UpdateCurrentTime()
-    {
-        while (true)
-        {
-            BookRecord.Update_Date = DateTime.Now;
-            StateHasChanged(); // Notify Blazor that the state has changed
+    // private async Task UpdateCurrentTime()
+    // {
+    //     while (true)
+    //     {
+    //         BookRecord.Update_Date = DateTime.Now;
+    //         StateHasChanged(); // Notify Blazor that the state has changed
 
-            await Task.Delay(1000); // Delay for 1 second
-        }
-    }
+    //         await Task.Delay(1000); // Delay for 1 second
+    //     }
+    // }
     public async Task ChangeStateOfSlider()
     {
         SliderState = false;
