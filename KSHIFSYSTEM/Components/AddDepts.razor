@@ -16,7 +16,7 @@
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2">
-            <div class="class1 class2" style="align-content:end">
+            <div class="col">
                 <MudItem>
                     <MudTextField Required style="background-color:white" Label="اسم الخبير" T="string" Variant="Variant.Outlined" @bind-Value="@Specialest.Name" />
                 </MudItem>
@@ -44,11 +44,12 @@
             </div>
         <br />
         <br />
-            <MudButton style="background-color:white" ButtonType="ButtonType.Submit" FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Size="Size.Large"><b>اضافة خبير </b></MudButton>
 
         <br />
         <br />
         </div>
+        <MudButton style="background-color:white" ButtonType="ButtonType.Submit" FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Size="Size.Large"><b>اضافة خبير </b></MudButton>
+
     </EditForm>
 </div>
 

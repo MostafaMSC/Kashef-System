@@ -5,30 +5,27 @@
 @inject IDawa _Dawa
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<script>
-    function updateCurrentTime() 
-        {
-
-
-            CurrentTime = document.querySelector('updateTime');
-            updateTime.innerText = CurrentTime;
-        }
-    }
+@* <script>
+    function updateCurrentTime() {
+        CurrentTime = document.querySelector('updateTime');
+        updateTime.innerText = CurrentTime;
+    
+            }
     setInterval(updateCurrentTime, 1000);
-</script>
+</script> *@
 
 @attribute [Authorize(Roles = "admin,eatalaJazaea")]
 <PageTitle>ادخال معلومات الكتاب الوارد</PageTitle>
 
 
-    <MudAlert Style="font-size:medium;color:white" Severity="Severity.Success" Square="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" id="updateTime">
+@*     <MudAlert Style="font-size:medium;color:white" Severity="Severity.Success" Square="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" id="updateTime">
         
             @(Book.Update_Date.HasValue ? Book.Update_Date.Value.ToString("dd/MM/yyyy | hh:mm:ss") : "No Date")
             
         
 
    </MudAlert>
-
+ *@
 
 
 <div style="border:solid;padding:20px;background-color:ghostwhite; elevation:2; border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
@@ -247,7 +244,7 @@
             UserName = user.Identity.Name;
         }
         // Update the time every second
-        await UpdateCurrentTime();
+        // await UpdateCurrentTime();
         base.OnInitialized();
 
 
@@ -318,16 +315,16 @@
         }
 
     }
-    private async Task UpdateCurrentTime()
-    {
-        while (true)
-        {
-            Book.Update_Date = DateTime.Now;
-            StateHasChanged(); // Notify Blazor that the state has changed
+    // private async Task UpdateCurrentTime()
+    // {
+    //     while (true)
+    //     {
+    //         Book.Update_Date = DateTime.Now;
+    //         StateHasChanged(); // Notify Blazor that the state has changed
 
-            await Task.Delay(1000); // Delay for 1 second
-        }
-    }
+    //         await Task.Delay(1000); // Delay for 1 second
+    //     }
+    // }
     
 
 

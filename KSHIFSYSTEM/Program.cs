@@ -1,4 +1,3 @@
-
 using KSHIFSYSTEM.BackEnd.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -37,15 +36,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationState<IdentityUser>>();
 builder.Services.AddHttpClient();
-
-
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddMudServices();
 builder.Services.AddScoped<IKshifInfo, KshifInfoRepo>();
 builder.Services.AddScoped<IDawa, DawaRepo>();
 builder.Services.AddScoped<ITotalKshofat, TotalKshofatRepo>();
 builder.Services.AddScoped<ITarsheh, TarshehRepo>();
-//builder.Services.AddScoped<IPrintingService, PrintingService>();
 builder.Services.AddScoped<ISystemUsers, SystemUsersRepo>();
 
 
