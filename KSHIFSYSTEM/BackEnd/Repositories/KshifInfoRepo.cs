@@ -99,8 +99,7 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
             SpecialRecord.KshofatNo++;
             await _db.SaveChangesAsync();
         }
-
-        public async Task<string> DeleteListOfDawas(List<int> listOfDeletedDawas)
+        public async Task<string> DeleteListOfDawas(List<int> ListOfDeletedDawas)
         {
             try
             {
