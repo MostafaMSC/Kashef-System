@@ -104,7 +104,7 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
             try
             {
                 var deletedDawas = await _db.SpecialestTable
-                    .Where(a => listOfDeletedDawas.Contains(a.ID))
+                    .Where(a => ListOfDeletedDawas.Contains(a.ID))
                     .ToListAsync();
 
                 _db.SpecialestTable.RemoveRange(deletedDawas);

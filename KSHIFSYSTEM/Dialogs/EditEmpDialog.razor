@@ -189,7 +189,7 @@
 
         <br />
         <center >
-            <MudButton Style="margin-left:30px" ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Success" Size="Size.Large">حفظ </MudButton>
+            <MudButton Style="margin-left:30px" @onclick='() => _navigationManager.NavigateTo("../viewBooks")' ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Success" Size="Size.Large">حفظ </MudButton>
          <MudButton  Variant="Variant.Filled" @onclick='() => _navigationManager.NavigateTo("../viewBooks")' StartIcon="@Icons.Material.Filled.Cancel" IconColor="Color.Error" Size="Size.Large">الغاء </MudButton>
         </center>
     </EditForm>

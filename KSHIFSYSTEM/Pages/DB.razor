@@ -178,7 +178,7 @@
 
         Tarsheh = await _Tarsheh.GetAllTarshehBooks();
         Wared = await _wared.GetAllDawas();
-        Specialest = await _sp.GetAllSpecialest();
+        // Specialest = await _sp.GetAllSpecialest();
         RemainBooks = Wared.Count() - Tarsheh.Count();
         UnCompleteBooks = _Tarsheh.TotalUncompleteBooks(Tarsheh);
     }
