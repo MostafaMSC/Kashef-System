@@ -14,6 +14,7 @@ namespace KSHIFSYSTEM.BackEnd.Interfaces
         public Task<string> BlockSpecial(List<int> ListOfBlockedSpecialest);
         public Task<string> UnBlockSpecial(List<int> ListOfBlockedSpecialest);
         public Task<List<KshfInfoModule>> GetAllBlockedSpecialest();
+        public Task UpdateKshifNoMinus(string SpecialName);
 
     }
 }

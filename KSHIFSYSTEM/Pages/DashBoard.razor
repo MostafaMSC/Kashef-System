@@ -30,7 +30,7 @@
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div>
-                <input class="form-control" type="text" placeholder="ادخل رقم الكتاب" @onchange="ChoseBook" />
+                <input class="form-control" type="text"  placeholder="ادخل رقم الكتاب" @onchange="ChoseBook" />
             </div>
             <br />
             <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1">
@@ -353,7 +353,6 @@
             AstmaraDateP = BookRecord.AstmaraDateP;
             AstmaraNoM = BookRecord.AstmaraNoM;
             AstmaraNoP = BookRecord.AstmaraNoP;
-
             JehaName = BookRecord.JahaName;
             HayaBookNo = BookRecord.HayaBookNo; 
             KshifDate = BookRecord.KshefDate;
@@ -396,10 +395,10 @@
                 Tarsheh.WasilNoP = AstmaraNoP;
                 Tarsheh.KshifType = KshifType;
                 Tarsheh.PlaceNo = PlaceNo;
-                Tarsheh.WasilNoM = WasilNoM;
-                Tarsheh.WasilNoP = WasilNoP;
-                Tarsheh.WasilDateM = WasilDateM;
-                Tarsheh.WasilDateP = WasilDateP;
+                Tarsheh.WasilNoM = AstmaraNoM;
+                Tarsheh.WasilNoP = AstmaraNoP;
+                Tarsheh.WasilDateM = AstmaraDateM;
+                Tarsheh.WasilDateP = AstmaraDateP;
 
                 Tarsheh.UserName = UserName;
                 i = 1;
@@ -505,8 +504,6 @@
                 }
 
                 var BackEndResponse = await _TR.AddNewSpecialestToTheSystem(Tarsheh);
-
-
                 await _JS.InvokeVoidAsync("alert", BackEndResponse);
                 Tarsheh = new TarshehBook();
                 BookRecord = new BookInfo();

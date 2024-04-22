@@ -377,7 +377,120 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
             }
             return "لم يتم الحذف";
         }
+        public async Task<string> DeleteSpecailestName11(int Id, string SpecilestName)
+        {
+            var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == Id);
 
+
+            if (Record == null)
+            {
+                return "لم يتم الحذف";
+            }
+            else if (Record.SpecaialName11 == SpecilestName)
+            {
+                Record.SpecaialName11 = null;
+                await _db.SaveChangesAsync();
+                return "تم الحذف";
+
+
+            }
+            return "لم يتم الحذف";
+        }
+        public async Task<string> DeleteSpecailestName12(int Id, string SpecilestName)
+        {
+            var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == Id);
+
+
+            if (Record == null)
+            {
+                return "لم يتم الحذف";
+            }
+            else if (Record.SpecaialName12 == SpecilestName)
+            {
+                Record.SpecaialName12 = null;
+                await _db.SaveChangesAsync();
+                return "تم الحذف";
+
+
+            }
+            return "لم يتم الحذف";
+        }
+        public async Task<string> DeleteSpecailestName13(int Id, string SpecilestName)
+        {
+            var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == Id);
+
+
+            if (Record == null)
+            {
+                return "لم يتم الحذف";
+            }
+            else if (Record.SpecaialName13 == SpecilestName)
+            {
+                Record.SpecaialName13 = null;
+                await _db.SaveChangesAsync();
+                return "تم الحذف";
+
+
+            }
+            return "لم يتم الحذف";
+        }
+        public async Task<string> DeleteSpecailestName14(int Id, string SpecilestName)
+        {
+            var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == Id);
+
+
+            if (Record == null)
+            {
+                return "لم يتم الحذف";
+            }
+            else if (Record.SpecaialName14 == SpecilestName)
+            {
+                Record.SpecaialName14 = null;
+                await _db.SaveChangesAsync();
+                return "تم الحذف";
+
+
+            }
+            return "لم يتم الحذف";
+        }
+        public async Task<string> DeleteSpecailestName15(int Id, string SpecilestName)
+        {
+            var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == Id);
+
+
+            if (Record == null)
+            {
+                return "لم يتم الحذف";
+            }
+            else if (Record.SpecaialName15 == SpecilestName)
+            {
+                Record.SpecaialName15 = null;
+                await _db.SaveChangesAsync();
+                return "تم الحذف";
+
+
+            }
+            return "لم يتم الحذف";
+        }
+        public async Task<string> DeleteSpecailestName16(int Id, string SpecilestName)
+        {
+            var Record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.ID == Id);
+
+
+            if (Record == null)
+            {
+                return "لم يتم الحذف";
+            }
+            else if (Record.SpecaialName16 == SpecilestName)
+            {
+                Record.SpecaialName16 = null;
+                await _db.SaveChangesAsync();
+                return "تم الحذف";
+
+
+            }
+            return "لم يتم الحذف";
+        }
         public async Task<bool> CheckIfTheBookResultsAddedPIC(int BookNO)
         {
             var record = await _db.TarshehBookTable.FirstOrDefaultAsync(a => a.BookNo == BookNO);

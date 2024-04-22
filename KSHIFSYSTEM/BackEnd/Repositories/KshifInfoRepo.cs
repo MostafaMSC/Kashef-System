@@ -96,7 +96,13 @@ namespace KSHIFSYSTEM.BackEnd.Repositories
         {
             var SpecialRecord = await _db.SpecialestTable.FirstOrDefaultAsync(a => a.Name == SpecialName && a.KshifType == KshifType);
 
-            SpecialRecord.KshofatNo++;
+            SpecialRecord.TotalKSofat++;
+            await _db.SaveChangesAsync();
+        }
+        public async Task UpdateKshifNoMinus(string SpecialName)
+        {
+            var SpecialRecord = await _db.SpecialestTable.FirstOrDefaultAsync(a => a.Name == SpecialName);
+            SpecialRecord.TotalKSofat--;
             await _db.SaveChangesAsync();
         }
         public async Task<string> DeleteListOfDawas(List<int> ListOfDeletedDawas)

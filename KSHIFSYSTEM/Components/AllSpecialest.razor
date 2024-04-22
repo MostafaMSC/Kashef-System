@@ -6,8 +6,6 @@
 @inject IKshifInfo _SP
 @inject NavigationManager _Nav
 @inject IDialogService _Dialog
-@* //,eatalaJazaea,DawaView
- *@
 
  @attribute [Authorize(Roles = "admin")]
 <PageTitle> كل الخبراء  </PageTitle>
@@ -60,8 +58,6 @@
      </MudDataGrid>
  </div>
 
-@*  <button id="specialstate" @onclick="@changeColor" class="form-control">متاح للعمل</button>
- *@
  <MudScrollToTop>
      <MudFab Color="Color.Tertiary" Icon="@Icons.Material.Filled.ArrowCircleUp" />
  </MudScrollToTop>

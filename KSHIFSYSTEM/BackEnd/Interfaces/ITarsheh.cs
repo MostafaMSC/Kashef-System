@@ -33,6 +33,12 @@ namespace KSHIFSYSTEM.BackEnd.Interfaces
         public Task<string> DeleteSpecailestName9(int Id, string? SpecilestName);
 
         public Task<string> DeleteSpecailestName10(int Id, string? SpecilestName);
+        public Task<string> DeleteSpecailestName11(int Id, string? SpecilestName);
+        public Task<string> DeleteSpecailestName12(int Id, string? SpecilestName);
+        public Task<string> DeleteSpecailestName13(int Id, string? SpecilestName);
+        public Task<string> DeleteSpecailestName14(int Id, string? SpecilestName);
+        public Task<string> DeleteSpecailestName15(int Id, string? SpecilestName);
+        public Task<string> DeleteSpecailestName16(int Id, string? SpecilestName);
 
         public Task<bool> CheckIfTheBookResultsAddedPIC(int BookNO);
         public Task<List<TarshehBook>> GetSpecialInfoByName(string Name);

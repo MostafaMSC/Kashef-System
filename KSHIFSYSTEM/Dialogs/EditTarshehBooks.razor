@@ -4,8 +4,7 @@
 @inject IDawa _Dawa
 @inject ISnackbar _Sb
 @inject ITarsheh _Tarsh
-
-
+@inject IKshifInfo _kshif
 @attribute [Authorize(Roles = "admin,eatalaJazaea")]
 
 <div  style=" direction:rtl; border:solid;padding:20px; margin:20px;background-color:white;border-color:lightblue;border-radius:20px;">
@@ -36,7 +35,6 @@
                     <MudTextField Style="background-color:white" Label="رقم المقاطعة" T="string" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.MokataNO" />
                 </MudItem>
             </div>
-
         </div>
         <br />
         <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-col-2">
@@ -60,9 +58,7 @@
                     <MudSelectItem Value="@(" المثنى")"> المثنى</MudSelectItem>
                     <MudSelectItem Value="@(" ميسان")"> ميسان</MudSelectItem>
                     <MudSelectItem Value="@(" الكوت")"> الكوت</MudSelectItem>
-
                 </MudSelect>
-
             </div>
             <div class="col">
                 <MudItem>
@@ -73,7 +69,6 @@
                     </MudSelect>
                 </MudItem>
             </div>
-
             <div class="col">
                 <MudItem>
                     <MudTextField Style="background-color:white" Label="اسم جهة الاصدار والمقاطعة" T="string" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.JehaName" />
@@ -84,31 +79,19 @@
                     <MudTextField Style="background-color:white" Label="تاريخ الكشف" T="DateTime?" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.KshefDate" />
                 </MudItem>
             </div>
-
-
-
-
         </div>
-
-
-
         <br />
         <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1">
-
-            
-            
             <div class="col">
                 <MudItem>
                     <MudTextField Style="background-color:white" Label="رقم الوصل" T="int?" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.AlwasilNo" />
                 </MudItem>
             </div>
-
             <div class="col">
                 <MudItem>
                     <MudTextField Style="background-color:white" Label=" تاريخ الوصل " T="DateTime?" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.AlwasilDate" />
                 </MudItem>
             </div>
-            
 
         </div>
         
@@ -122,9 +105,7 @@
                  </MudItem>
              </div>
              <div class="col">
-                 <MudItem>
-                     <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="(()=>DeleteSpecialest1(TarshehViewModel.Id,TarshehViewModel.SpecaialName1))" />
-                 </MudItem>
+
              </div>
              <div class="col">
                  <MudItem>
@@ -255,9 +236,13 @@
              </div>
 
          </div>
+
          <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1">
+
              <div class="col">
+
                  <MudItem>
+
                      <MudTextField ReadOnly Style="background-color:white" Label="اسم الخبير " T="string" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.SpecaialName13" />
                  </MudItem>
              </div>
@@ -279,7 +264,9 @@
 
 
          </div>
+
          <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1">
+
              <div class="col">
                  <MudItem>
                      <MudTextField ReadOnly Style="background-color:white" Label="اسم الخبير " T="string" Variant="Variant.Outlined" @bind-Value="@TarshehViewModel.SpecaialName15" />
@@ -311,11 +298,12 @@
                  <MudButton @onclick='() => _navigationManager.NavigateTo("../viewAllTarshehBooks")' FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Error" Size="Size.Large">تاكيد حذف الخبراء </MudButton>
 
             </div>
+
              <div class="col">
 
                  <MudButton ButtonType="ButtonType.Submit" @onclick='() => _navigationManager.NavigateTo("../viewAllTarshehBooks")' FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Success" Size="Size.Large">الغاء حذف الخبراء وحفظ تعديلات الكتاب </MudButton>
              </div>
-
+            
         </div>
          
     </EditForm>
@@ -348,9 +336,11 @@
     {
         TarshehViewModel = await _Tarsh.GetTarshehViewModelByUserId(Id);
     }
+
     private async Task DeleteSpecialest1(int Id, string SpecialestName)
     {
         var Response = await _Tarsh.DeleteSpecailestName1(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
         _Sb.Add(Response, Severity.Info);
         
 
@@ -358,6 +348,8 @@
     private async Task DeleteSpecialest2(int Id, string SpecialestName)
     {
         var Response = await _Tarsh.DeleteSpecailestName2(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
         _Sb.Add( Response, Severity.Info);
         
 
@@ -365,6 +357,8 @@
     private async Task DeleteSpecialest3(int Id, string SpecialestName)
     {
         var Response = await _Tarsh.DeleteSpecailestName3(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
         _Sb.Add( Response, Severity.Info);
         
 
@@ -372,6 +366,8 @@
     private async Task DeleteSpecialest4(int Id, string SpecialestName)
     {
         var Response = await _Tarsh.DeleteSpecailestName4(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
         _Sb.Add( Response, Severity.Info);
         
 
@@ -379,6 +375,8 @@
     private async Task DeleteSpecialest5(int Id, string SpecialestName)
     {
         var Response = await _Tarsh.DeleteSpecailestName5(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
         _Sb.Add( Response, Severity.Info);
         
 
@@ -386,6 +384,8 @@
     private async Task DeleteSpecialest6(int Id, string SpecialestName)
     {
         var Response = await _Tarsh.DeleteSpecailestName6(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
         _Sb.Add( Response, Severity.Info);
         
 
@@ -393,11 +393,15 @@
     private async Task DeleteSpecialest7(int Id, string SpecialestName)
     {
         var Response = await _Tarsh.DeleteSpecailestName7(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+        _Sb.Add(Response, Severity.Info);
         
     }
     private async Task DeleteSpecialest8(int Id, string SpecialestName)
     {
         var Response = await _Tarsh.DeleteSpecailestName8(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
         _Sb.Add( Response, Severity.Info);
         
 
@@ -405,6 +409,8 @@
     private async Task DeleteSpecialest9(int Id, string SpecialestName)
     {
         var Response = await _Tarsh.DeleteSpecailestName9(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
         _Sb.Add( Response, Severity.Info);
         
 
@@ -412,8 +418,59 @@
     private async Task DeleteSpecialest10(int Id, string SpecialestName)
     {
         var Response = await _Tarsh.DeleteSpecailestName10(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
         _Sb.Add( Response, Severity.Info);
         
     }
+    private async Task DeleteSpecialest11(int Id, string SpecialestName)
+    {
+        var Response = await _Tarsh.DeleteSpecailestName11(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
+        _Sb.Add(Response, Severity.Info);
+
+    }
+    private async Task DeleteSpecialest12(int Id, string SpecialestName)
+    {
+        var Response = await _Tarsh.DeleteSpecailestName12(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
+        _Sb.Add(Response, Severity.Info);
+
+    }
+    private async Task DeleteSpecialest13(int Id, string SpecialestName)
+    {
+        var Response = await _Tarsh.DeleteSpecailestName13(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
+        _Sb.Add( Response, Severity.Info);
+        
+    }
+    private async Task DeleteSpecialest14(int Id, string SpecialestName)
+    {
+        var Response = await _Tarsh.DeleteSpecailestName14(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
+        _Sb.Add( Response, Severity.Info);
+        
+    }
+    private async Task DeleteSpecialest15(int Id, string SpecialestName)
+    {
+        var Response = await _Tarsh.DeleteSpecailestName15(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
+        _Sb.Add( Response, Severity.Info);
+        
+    }
+    private async Task DeleteSpecialest16(int Id, string SpecialestName)
+    {
+        var Response = await _Tarsh.DeleteSpecailestName16(Id, SpecialestName);
+        await _kshif.UpdateKshifNoMinus(SpecialestName);
+
+        _Sb.Add(Response, Severity.Info);
+
+    }
+
 
 }
